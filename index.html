@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jakub Antalik</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="name">Jakub Antalik</h1>
+            <nav class="nav">
+                <button class="mobile-customize-btn" id="mobileCustomizeBtn">
+                    <svg class="mobile-customize-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M0.666667 8C0.666667 3.94991 3.94991 0.666667 8 0.666667C12.0501 0.666667 15.3333 3.94991 15.3333 8C15.3333 9.47276 14.1394 10.6667 12.6667 10.6667H12.3333C12.0025 10.6667 11.9017 10.6681 11.826 10.6781C11.2277 10.7568 10.7568 11.2277 10.6781 11.826C10.6681 11.9017 10.6667 12.0025 10.6667 12.3333V12.6667C10.6667 14.1394 9.47276 15.3333 8 15.3333C3.94991 15.3333 0.666667 12.0501 0.666667 8ZM6.66667 3.33333C5.93029 3.33333 5.33333 3.93029 5.33333 4.66667C5.33333 5.40305 5.93029 6 6.66667 6C7.40305 6 8 5.40305 8 4.66667C8 3.93029 7.40305 3.33333 6.66667 3.33333ZM9.33333 5.33333C9.33333 4.59695 9.93029 4 10.6667 4C11.403 4 12 4.59695 12 5.33333C12 6.06971 11.403 6.66667 10.6667 6.66667C9.93029 6.66667 9.33333 6.06971 9.33333 5.33333ZM3.33333 8C3.33333 7.26362 3.93029 6.66667 4.66667 6.66667C5.40305 6.66667 6 7.26362 6 8C6 8.73638 5.40305 9.33333 4.66667 9.33333C3.93029 9.33333 3.33333 8.73638 3.33333 8Z" fill="currentColor"/></svg>
+                    <span>Customize</span>
+                </button>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <svg id="themeIcon" class="theme-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.04458 1.60806C6.1589 1.35528 6.10472 1.05812 5.90855 0.861947C5.71237 0.665775 5.41522 0.611597 5.16244 0.725914C2.51258 1.92428 0.666626 4.59176 0.666626 7.69181C0.666626 11.9121 4.08786 15.3334 8.30817 15.3334C11.4082 15.3334 14.0757 13.4874 15.2741 10.8375C15.3884 10.5848 15.3342 10.2876 15.138 10.0914C14.9419 9.89526 14.6447 9.84108 14.3919 9.9554C13.6009 10.3131 12.7225 10.5126 11.7956 10.5126C8.31168 10.5126 5.4874 7.6883 5.4874 4.20438C5.4874 3.27752 5.68686 2.39905 6.04458 1.60806Z" fill="currentColor"/></svg>
+                </button>
+            </nav>
+        </header>
+
+        <!-- Customization Panel -->
+        <div class="customization-panel" id="customizationPanel">
+            <div class="sheet-handle"></div>
+            <div class="panel-header" id="panelHeader">
+                <span class="panel-title">Customization</span>
+                <svg class="panel-arrow" id="panelArrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 6.5L8 9.5L11 6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            
+            <div class="panel-content" id="panelContent">
+                <div class="control-section">
+                    <label class="control-label">Font</label>
+                    <div class="custom-select" id="fontSelect">
+                        <span class="select-value">Inter</span>
+                        <svg class="select-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 6.5L8 9.5L11 6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <div class="select-options">
+                            <div class="select-option" data-value="system">Inter</div>
+                            <div class="select-option" data-value="Suisse">Suisse Intl</div>
+                            <div class="select-option" data-value="serif">Serif</div>
+                            <div class="select-option" data-value="sans-serif">Sans Serif</div>
+                            <div class="select-option" data-value="monospace">Monospace</div>
+                            <div class="select-option" data-value="Georgia">Georgia</div>
+                            <div class="select-option" data-value="Times">Times</div>
+                            <div class="select-option" data-value="Arial">Arial</div>
+                            <div class="select-option" data-value="Helvetica">Helvetica</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <label class="control-label">Text style</label>
+                    <div class="button-group">
+                        <button class="style-button" id="boldButton" data-style="bold">
+                            <img src="icons/ic_text-bold.svg" alt="Bold" class="button-icon">
+                        </button>
+                        <button class="style-button" id="italicButton" data-style="italic">
+                            <img src="icons/ic_text-italic.svg" alt="Italic" class="button-icon">
+                        </button>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <label class="control-label">Text color</label>
+                    <div class="custom-select color-select" id="textColorSelect">
+                        <span class="color-preview" id="colorPreview"></span>
+                        <span class="select-value" id="colorSelectValue">Default</span>
+                        <svg class="select-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 6.5L8 9.5L11 6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <div class="color-picker-panel" id="colorPickerPanel">
+                            <div class="cp-spectrum-wrap">
+                                <canvas class="cp-spectrum" id="cpSpectrum" width="196" height="140"></canvas>
+                                <div class="cp-cursor" id="cpCursor"></div>
+                            </div>
+                            <div class="cp-hue-wrap">
+                                <canvas class="cp-hue" id="cpHue" width="196" height="14"></canvas>
+                                <div class="cp-hue-cursor" id="cpHueCursor"></div>
+                            </div>
+                            <div class="cp-presets">
+                                <button class="cp-preset cp-preset-default" data-color="default" title="Default"></button>
+                                <button class="cp-preset" data-color="#000000" style="background:#000000" title="Black"></button>
+                                <button class="cp-preset" data-color="#6b7280" style="background:#6b7280" title="Gray"></button>
+                                <button class="cp-preset" data-color="#1d4ed8" style="background:#1d4ed8" title="Blue"></button>
+                                <button class="cp-preset" data-color="#059669" style="background:#059669" title="Green"></button>
+                                <button class="cp-preset" data-color="#dc2626" style="background:#dc2626" title="Red"></button>
+                                <button class="cp-preset" data-color="#7c3aed" style="background:#7c3aed" title="Purple"></button>
+                                <button class="cp-preset" data-color="#d97706" style="background:#d97706" title="Amber"></button>
+                            </div>
+                            <div class="cp-hex-row">
+                                <span class="cp-hex-label">#</span>
+                                <input class="cp-hex-input" id="cpHexInput" type="text" maxlength="6" value="000000" spellcheck="false">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-section" data-control="corner-radius">
+                    <label class="control-label">Corner radius</label>
+                    <div class="radius-slider-wrapper">
+                        <input type="range" id="radiusSlider" class="radius-slider" min="0" max="32" value="16" step="1">
+                        <span class="radius-value" id="radiusValue">16</span>
+                    </div>
+                </div>
+
+                <div class="control-section" data-control="logo-size">
+                    <label class="control-label" id="logoSizeLabel">Logo size</label>
+                    <div class="radius-slider-wrapper">
+                        <input type="range" id="logoSizeSlider" class="radius-slider" min="10" max="24" value="14" step="1">
+                        <span class="radius-value" id="logoSizeValue">14</span>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <label class="control-label">Background style</label>
+                    <div class="custom-select" id="backgroundSelect">
+                        <span class="select-value">Default</span>
+                        <svg class="select-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 6.5L8 9.5L11 6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <div class="select-options">
+                            <div class="select-option" data-value="default">Default</div>
+                            <div class="select-option" data-value="gradient-sunset">Sunset</div>
+                            <div class="select-option" data-value="gradient-ocean">Ocean</div>
+                            <div class="select-option" data-value="gradient-forest">Forest</div>
+                            <div class="select-option" data-value="gradient-lavender">Lavender</div>
+                            <div class="select-option" data-value="pattern-dots">Dots</div>
+                            <div class="select-option" data-value="pattern-grid">Grid</div>
+                            <div class="select-option" data-value="pattern-waves">Waves</div>
+                            <div class="select-option" data-value="pattern-noise">Noise</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="reset-button" id="resetButton">Reset all</button>
+            </div>
+        </div>
+
+        <main class="main-content">
+            <section class="about-section">
+                <div class="about-text">
+                    <p class="about-bio">I'm a product designer with a passion for interaction and motion. Currently, I'm the Design Lead at <a href="https://fun.xyz" class="inline-link">Fun.xyz</a>. Previously, I worked at <a href="https://0x.org" class="inline-link">0x.org</a>, <a href="https://frame.io" class="inline-link">Frame.io</a> (acquired by Adobe), and <a href="https://intercom.com" class="inline-link">Intercom</a>.</p>
+                    <p class="about-bio">You can find me at <a href="https://x.com/jakubantalik" class="inline-link">@jakubantalik</a> on <a href="https://instagram.com/jakubantalik" class="inline-link">Instagram</a> and <a href="https://linkedin.com/in/jakubantalik" class="inline-link">LinkedIn</a>, or reach me by <a href="mailto:jakubja@gmail.com" class="inline-link">email</a>.</p>
+                </div>
+            </section>
+
+            <section class="work-section">
+                <h2 class="section-title work-title">Selected work</h2>
+                <div class="work-content">
+                    <!-- Work items will be added here -->
+                </div>
+                <div class="video-grid">
+                    <div class="video-item">
+                        <video autoplay muted loop playsinline>
+                            <source src="videos/tw.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video-item">
+                        <video autoplay muted loop playsinline>
+                            <source src="videos/notification-states-3.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video-item">
+                        <video autoplay muted loop playsinline>
+                            <source src="videos/qr-code-animation.mov">
+                        </video>
+                    </div>
+                    <div class="video-item">
+                        <video autoplay muted loop playsinline>
+                            <source src="videos/install-button-3.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video-item">
+                        <video autoplay muted loop playsinline>
+                            <source src="videos/main connect wallet_7.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video-item">
+                        <video autoplay muted loop playsinline>
+                            <source src="videos/navigation-large.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video-item">
+                        <video autoplay muted loop playsinline>
+                            <source src="videos/main_1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video-item">
+                        <video autoplay muted loop playsinline>
+                            <source src="videos/toast.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video-item">
+                        <video autoplay muted loop playsinline>
+                            <source src="videos/dribbble-shot-ipad-1-1600-comp.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video-item">
+                        <img src="videos/GxBEp64W4AAO0LT.jpg" alt="">
+                    </div>
+                    <div class="video-item">
+                        <img src="videos/GbyPjNuWYAYISl9.jpg" alt="">
+                    </div>
+                    <div class="video-item">
+                        <img src="videos/Fw5-LJVXoAUrXLO.jpg" alt="">
+                    </div>
+                    <div class="video-item">
+                        <img src="videos/FvSMDQkWwAIBoXH.jpg" alt="">
+                    </div>
+                    <div class="video-item">
+                        <img src="videos/FSjF9y6WQAArBX9.jpg" alt="">
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="site-footer">
+            <span>© 2026 Jakub Antalik</span>
+            <nav class="footer-links">
+                <a href="mailto:jakubja@gmail.com">Email</a>
+                <a href="https://x.com/jakubantalik">X (Twitter)</a>
+                <a href="https://instagram.com/jakubantalik">Instagram</a>
+                <a href="https://linkedin.com/in/jakubantalik">Linkedin</a>
+            </nav>
+        </footer>
+    </div>
+
+    <div class="sheet-overlay" id="sheetOverlay"></div>
+    <script src="script.js"></script>
+</body>
+</html>
