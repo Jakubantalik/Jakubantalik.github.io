@@ -370,6 +370,9 @@ class CustomizationPanel {
             this.updateMobileLabels();
         });
 
+        // Improve slider touch targets on mobile
+        this.initSliderTouchTargets();
+
         // Swipe-to-dismiss gesture on mobile sheet
         this.initSheetSwipeDismiss();
     }
@@ -880,6 +883,25 @@ class CustomizationPanel {
         if (this.logoSizeLabel) {
             this.logoSizeLabel.textContent = isMobile ? 'Logo size' : 'Logo size';
         }
+    }
+
+    initSliderTouchTargets() {
+        if (window.innerWidth > 768) return;
+        const sliders = this.panel.querySelectorAll('.radius-slider');
+        sliders.forEach(slider => {
+            const wrapper = slider.closest('.radius-slider-wrapper');
+            if (!wrapper) return;
+            wrapper.addEventListener('touchstart', (e) => {
+                if (e.target === slider) return;
+                const rect = slider.getBoundingClientRect();
+                const touch = e.touches[0];
+                const percent = Math.max(0, Math.min(1, (touch.clientX - rect.left) / rect.width));
+                const val = Math.round(Number(slider.min) + percent * (Number(slider.max) - Number(slider.min)));
+                slider.value = val;
+                slider.dispatchEvent(new Event('input', { bubbles: true }));
+                slider.focus();
+            }, { passive: true });
+        });
     }
 
     initSheetSwipeDismiss() {

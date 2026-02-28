@@ -1731,30 +1731,31 @@ body {
         flex: 1;
     }
 
-    /* Slider wrapper */
+    /* Slider: 22px visual thumb, 44px touch area */
     .radius-slider-wrapper {
-        height: 40px;
-    }
-
-    .radius-slider-wrapper {
-        height: 44px;
+        height: 48px;
+        overflow: visible;
     }
 
     .radius-slider {
-        height: 44px;
+        height: 48px;
         touch-action: none;
+    }
+
+    .radius-slider::-webkit-slider-runnable-track {
+        height: 6px;
     }
 
     .radius-slider::-webkit-slider-thumb {
         -webkit-appearance: none;
         appearance: none;
-        width: 18px;
-        height: 18px;
+        width: 22px;
+        height: 22px;
         background: #ffffff;
         border-radius: 50%;
         border: none;
         cursor: pointer;
-        margin-top: -7px;
+        margin-top: -9px;
         box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.06),
                     0 0.5px 1px rgba(0, 0, 0, 0.1),
                     0 1px 2px rgba(0, 0, 0, 0.12),
@@ -1763,8 +1764,8 @@ body {
     }
 
     .radius-slider::-moz-range-thumb {
-        width: 18px;
-        height: 18px;
+        width: 22px;
+        height: 22px;
         background: #ffffff;
         border-radius: 50%;
         border: none;
