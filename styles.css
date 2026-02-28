@@ -1731,15 +1731,21 @@ body {
         flex: 1;
     }
 
-    /* Slider: 22px visual thumb, 44px touch area */
+    /* Slider: 22px visual thumb, large touch area */
     .radius-slider-wrapper {
         height: 48px;
         overflow: visible;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-action: none;
+        -webkit-touch-callout: none;
     }
 
     .radius-slider {
         height: 48px;
         touch-action: none;
+        -webkit-user-select: none;
+        user-select: none;
     }
 
     .radius-slider::-webkit-slider-runnable-track {
