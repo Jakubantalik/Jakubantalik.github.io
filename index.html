@@ -55,13 +55,16 @@
                 </div>
 
                 <div class="control-section">
-                    <label class="control-label">Text style</label>
+                    <label class="control-label">Text & Content style</label>
                     <div class="button-group">
                         <button class="style-button" id="boldButton" data-style="bold">
                             <img src="icons/ic_text-bold.svg" alt="Bold" class="button-icon">
                         </button>
                         <button class="style-button" id="italicButton" data-style="italic">
-                            <img src="icons/ic_text-italic.svg" alt="Italic" class="button-icon">
+                            <svg class="button-icon-svg" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3L6.5 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M7.5 3H11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M4.5 13H8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                        </button>
+                        <button class="style-button" id="threeDButton" data-style="3d">
+                            <svg class="button-icon-svg" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1.5L2.5 4.5v7L8 14.5l5.5-3v-7L8 1.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><line x1="8" y1="7.5" x2="8" y2="14.5" stroke="currentColor" stroke-width="1.5"/><line x1="2.5" y1="4.5" x2="8" y2="7.5" stroke="currentColor" stroke-width="1.5"/><line x1="13.5" y1="4.5" x2="8" y2="7.5" stroke="currentColor" stroke-width="1.5"/></svg>
                         </button>
                     </div>
                 </div>
@@ -147,10 +150,13 @@
             </section>
 
             <section class="work-section">
-                <h2 class="section-title work-title">Selected work</h2>
+                <div class="work-title-wrapper">
+                    <h2 class="section-title work-title">Selected work</h2>
+                </div>
                 <div class="work-content">
                     <!-- Work items will be added here -->
                 </div>
+                <div class="video-grid-wrapper">
                 <div class="video-grid">
                     <div class="video-item">
                         <video autoplay muted loop playsinline>
@@ -213,19 +219,22 @@
                         <img src="videos/FSjF9y6WQAArBX9.jpg" alt="">
                     </div>
                 </div>
+                </div>
             </section>
 
         </main>
 
-        <footer class="site-footer">
-            <span>© 2026 Jakub Antalik</span>
-            <nav class="footer-links">
-                <a href="mailto:jakubja@gmail.com">Email</a>
-                <a href="https://x.com/jakubantalik">X (Twitter)</a>
-                <a href="https://instagram.com/jakubantalik">Instagram</a>
-                <a href="https://linkedin.com/in/jakubantalik">Linkedin</a>
-            </nav>
-        </footer>
+        <div class="footer-wrapper">
+            <footer class="site-footer">
+                <span>© 2026 Jakub Antalik</span>
+                <nav class="footer-links">
+                    <a href="mailto:jakubja@gmail.com">Email</a>
+                    <a href="https://x.com/jakubantalik">X (Twitter)</a>
+                    <a href="https://instagram.com/jakubantalik">Instagram</a>
+                    <a href="https://linkedin.com/in/jakubantalik">Linkedin</a>
+                </nav>
+            </footer>
+        </div>
     </div>
 
     <div class="sheet-overlay" id="sheetOverlay"></div>

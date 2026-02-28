@@ -199,7 +199,8 @@ class CustomizationPanel {
             cornerRadius: 16,
             logoSize: 14,
             isBold: false,
-            isItalic: false
+            isItalic: false,
+            is3D: false
         };
         
         this.settings = { ...this.defaultSettings };
@@ -240,7 +241,9 @@ class CustomizationPanel {
         // Buttons
         this.boldButton = document.getElementById('boldButton');
         this.italicButton = document.getElementById('italicButton');
+        this.threeDButton = document.getElementById('threeDButton');
         this.resetButton = document.getElementById('resetButton');
+        this.aboutText = document.querySelector('.about-text');
         
         // Mobile sheet
         this.mobileCustomizeBtn = document.getElementById('mobileCustomizeBtn');
@@ -358,6 +361,13 @@ class CustomizationPanel {
             this.settings.isItalic = !this.settings.isItalic;
             this.italicButton.classList.toggle('active', this.settings.isItalic);
             this.applyTextStyle();
+            this.saveSettings();
+        });
+        
+        this.threeDButton.addEventListener('click', () => {
+            this.settings.is3D = !this.settings.is3D;
+            this.threeDButton.classList.toggle('active', this.settings.is3D);
+            this.apply3DEffect();
             this.saveSettings();
         });
         
@@ -1120,6 +1130,57 @@ class CustomizationPanel {
         });
     }
 
+    apply3DEffect(animate = true) {
+        const navEl = document.querySelector('.nav');
+        const footerEl = document.querySelector('.site-footer');
+        const targets = [
+            this.logoElement,
+            navEl,
+            this.aboutText,
+            document.querySelector('.work-title'),
+            document.querySelector('.video-grid'),
+            footerEl
+        ].filter(Boolean);
+
+        targets.forEach(target => {
+            const wrapper = target.closest('.header') || target.closest('.about-section') || target.closest('.work-title-wrapper') || target.closest('.video-grid-wrapper') || target.closest('.footer-wrapper') || target.parentElement;
+            if (!wrapper) return;
+
+            if (this.settings.is3D) {
+                if (!wrapper.classList.contains('perspective-container')) {
+                    wrapper.classList.add('perspective-container');
+                }
+                if (!target.classList.contains('perspective-distant')) {
+                    target.classList.add('perspective-distant');
+                    if (!animate) target.style.transition = 'none';
+                    requestAnimationFrame(() => {
+                        target.classList.add('perspective-on');
+                        if (!animate) {
+                            requestAnimationFrame(() => target.style.transition = '');
+                        }
+                    });
+                }
+            } else {
+                if (target.classList.contains('perspective-distant')) {
+                    target.classList.remove('perspective-on');
+                    const cleanup = () => {
+                        target.removeEventListener('transitionend', cleanup);
+                        target.classList.remove('perspective-distant');
+                        target.style.transition = '';
+                        wrapper.classList.remove('perspective-container');
+                    };
+                    if (animate) {
+                        target.addEventListener('transitionend', cleanup);
+                    } else {
+                        cleanup();
+                    }
+                } else {
+                    wrapper.classList.remove('perspective-container');
+                }
+            }
+        });
+    }
+
     isCustomized() {
         return this.settings.fontFamily !== this.defaultSettings.fontFamily ||
                this.settings.textColorChanged !== this.defaultSettings.textColorChanged ||
@@ -1127,7 +1188,8 @@ class CustomizationPanel {
                this.settings.cornerRadius !== this.defaultSettings.cornerRadius ||
                this.settings.logoSize !== this.defaultSettings.logoSize ||
                this.settings.isBold !== this.defaultSettings.isBold ||
-               this.settings.isItalic !== this.defaultSettings.isItalic;
+               this.settings.isItalic !== this.defaultSettings.isItalic ||
+               this.settings.is3D !== this.defaultSettings.is3D;
     }
 
     updateResetButtonState() {
@@ -1154,6 +1216,7 @@ class CustomizationPanel {
         
         this.boldButton.classList.remove('active');
         this.italicButton.classList.remove('active');
+        this.threeDButton.classList.remove('active');
 
         // Apply reset settings
         this.applyFontFamily();
@@ -1162,6 +1225,7 @@ class CustomizationPanel {
         this.applyLogoSize();
         this.applyCornerRadius();
         this.applyTextStyle();
+        this.apply3DEffect();
         
         this.saveSettings();
         
@@ -1188,6 +1252,7 @@ class CustomizationPanel {
             this.applyLogoSize();
             this.applyCornerRadius();
             this.applyTextStyle();
+            this.apply3DEffect(false);
             
             // Update UI to reflect loaded settings
             this.updateUIFromSettings();
@@ -1224,6 +1289,7 @@ class CustomizationPanel {
         // Update style buttons
         this.boldButton.classList.toggle('active', this.settings.isBold);
         this.italicButton.classList.toggle('active', this.settings.isItalic);
+        this.threeDButton.classList.toggle('active', this.settings.is3D);
     }
 
     markSelectedOption(selectElement, value) {
@@ -1392,7 +1458,8 @@ class TextCustomizer {
             textColorDark: '', // Dark theme version
             backgroundStyle: 'default',
             isBold: false,
-            isItalic: false
+            isItalic: false,
+            is3D: false
         };
 
         // Dragging state
@@ -1596,7 +1663,8 @@ class TextCustomizer {
             textColorDark: '',
             backgroundStyle: 'default',
             isBold: false,
-            isItalic: false
+            isItalic: false,
+            is3D: false
         };
 
         // Reset UI controls

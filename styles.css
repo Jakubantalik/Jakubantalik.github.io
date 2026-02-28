@@ -272,6 +272,77 @@ body {
     margin-bottom: 0;
 }
 
+/* 3D Perspective effect */
+.perspective-container {
+    perspective: 800px;
+}
+
+.perspective-distant {
+    transform-style: preserve-3d;
+    transform: rotateX(0deg) rotateY(0deg);
+    transition: transform 1s cubic-bezier(0.59, 0.14, 0.35, 0.99);
+}
+
+.perspective-distant.perspective-on {
+    transform: rotateX(12deg) rotateY(-24deg);
+}
+
+.work-title-wrapper {
+    overflow: visible;
+}
+
+.video-grid-wrapper {
+    overflow: visible;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    box-sizing: border-box;
+}
+
+.video-grid-wrapper.perspective-container {
+    perspective: 2400px;
+}
+
+.work-title.perspective-distant {
+    transform-origin: left center;
+}
+
+.video-grid.perspective-distant {
+    transform-origin: center center;
+}
+
+.video-grid.perspective-distant.perspective-on {
+    transform: rotateX(2deg) rotateY(-3deg);
+}
+
+.nav.perspective-distant {
+    transform-origin: right center;
+}
+
+.footer-wrapper {
+    overflow: visible;
+}
+
+.site-footer.perspective-distant {
+    transform-origin: center center;
+}
+
+.site-footer.perspective-distant.perspective-on {
+    transform: rotateX(4deg) rotateY(-8deg);
+}
+
+@media (max-width: 768px) {
+    .footer-wrapper.perspective-container {
+        perspective: none;
+    }
+
+    .site-footer.perspective-distant,
+    .site-footer.perspective-distant.perspective-on {
+        transform: none;
+        transform-style: flat;
+    }
+}
+
 /* Experience section */
 .experience-title {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -358,13 +429,10 @@ body {
 .work-section .video-grid {
     column-count: 2;
     column-gap: 24px;
-    width: 100vw;
+    width: 100%;
     margin: 24px 0 0;
     padding: 0 24px;
     box-sizing: border-box;
-    /* Break out of container to go full width, 24px padding on each side */
-    margin-left: calc(-50vw + 50%);
-    margin-right: calc(-50vw + 50%);
 }
 
 .video-item {
@@ -888,6 +956,26 @@ body {
     height: 16px;
     opacity: 0.7;
     transition: opacity 0.2s ease;
+}
+
+.button-icon-svg {
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+    color: var(--toolbar-text, #212529);
+}
+
+.style-button:hover .button-icon-svg {
+    opacity: 1;
+}
+
+.style-button.active .button-icon-svg {
+    opacity: 1;
+}
+
+[data-theme="dark"] .button-icon-svg {
+    color: var(--toolbar-text, #f9fafb);
 }
 
 /* Color select trigger */
