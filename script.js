@@ -9,19 +9,13 @@ class ThemeManager {
         this.themeToggle = document.getElementById('themeToggle');
         this.themeIcon = document.getElementById('themeIcon');
         
-        // Check for saved theme or default to system preference
-        const savedTheme = localStorage.getItem('theme');
         const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        
-        this.currentTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+        this.currentTheme = systemPrefersDark ? 'dark' : 'light';
         this.applyTheme(this.currentTheme);
         
-        // Listen for system theme changes
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-            if (!localStorage.getItem('theme')) {
-                this.currentTheme = e.matches ? 'dark' : 'light';
-                this.applyTheme(this.currentTheme);
-            }
+            this.currentTheme = e.matches ? 'dark' : 'light';
+            this.applyTheme(this.currentTheme);
         });
     }
 
@@ -29,7 +23,6 @@ class ThemeManager {
         this.themeToggle.addEventListener('click', () => {
             this.currentTheme = this.currentTheme === 'light' ? 'dark' : 'light';
             this.applyTheme(this.currentTheme);
-            localStorage.setItem('theme', this.currentTheme);
         });
     }
 
@@ -885,7 +878,7 @@ class CustomizationPanel {
     updateMobileLabels() {
         const isMobile = window.innerWidth <= 768;
         if (this.logoSizeLabel) {
-            this.logoSizeLabel.textContent = isMobile ? 'Text scale' : 'Logo size';
+            this.logoSizeLabel.textContent = isMobile ? 'Logo size' : 'Logo size';
         }
     }
 
