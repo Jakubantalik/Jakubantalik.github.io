@@ -967,6 +967,7 @@ class CustomizationPanel {
             currentY = e.touches[0].clientY;
             const deltaY = currentY - startY;
             if (deltaY > 0) {
+                e.preventDefault();
                 this.panel.style.transform = `translateY(${deltaY}px)`;
                 const progress = Math.min(deltaY / 300, 1);
                 if (this.sheetOverlay) {
@@ -980,12 +981,12 @@ class CustomizationPanel {
             isDragging = false;
             const deltaY = currentY - startY;
             this.panel.style.transition = '';
+            this.panel.style.transform = '';
             if (this.sheetOverlay) this.sheetOverlay.style.opacity = '';
 
-            if (deltaY > 100) {
+            if (deltaY > 80) {
                 this.closeSheet();
             } else {
-                this.panel.style.transform = '';
                 requestAnimationFrame(() => {
                     this.panel.classList.add('sheet-open');
                 });
@@ -996,7 +997,7 @@ class CustomizationPanel {
             sheetHandle.addEventListener('touchstart', onTouchStart, { passive: true });
         }
         panelHeader.addEventListener('touchstart', onTouchStart, { passive: true });
-        document.addEventListener('touchmove', onTouchMove, { passive: true });
+        document.addEventListener('touchmove', onTouchMove, { passive: false });
         document.addEventListener('touchend', onTouchEnd);
     }
 
