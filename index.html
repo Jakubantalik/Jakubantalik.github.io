@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jakub Antalik</title>
+    <meta name="description" content="Product designer with a passion for interaction and motion. Design Lead at Fun.xyz.">
+    <meta property="og:title" content="Jakub Antalik">
+    <meta property="og:description" content="Product designer with a passion for interaction and motion. Design Lead at Fun.xyz.">
+    <meta property="og:image" content="https://jakubantalik.com/og-image.png">
+    <meta property="og:url" content="https://jakubantalik.com">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Jakub Antalik">
+    <meta name="twitter:description" content="Product designer with a passion for interaction and motion. Design Lead at Fun.xyz.">
+    <meta name="twitter:image" content="https://jakubantalik.com/og-image.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="name">Jakub Antalik</h1>
+            <nav class="nav">
+                <button class="mobile-customize-btn" id="mobileCustomizeBtn">
+                    <svg class="mobile-customize-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M0.666667 8C0.666667 3.94991 3.94991 0.666667 8 0.666667C12.0501 0.666667 15.3333 3.94991 15.3333 8C15.3333 9.47276 14.1394 10.6667 12.6667 10.6667H12.3333C12.0025 10.6667 11.9017 10.6681 11.826 10.6781C11.2277 10.7568 10.7568 11.2277 10.6781 11.826C10.6681 11.9017 10.6667 12.0025 10.6667 12.3333V12.6667C10.6667 14.1394 9.47276 15.3333 8 15.3333C3.94991 15.3333 0.666667 12.0501 0.666667 8ZM6.66667 3.33333C5.93029 3.33333 5.33333 3.93029 5.33333 4.66667C5.33333 5.40305 5.93029 6 6.66667 6C7.40305 6 8 5.40305 8 4.66667C8 3.93029 7.40305 3.33333 6.66667 3.33333ZM9.33333 5.33333C9.33333 4.59695 9.93029 4 10.6667 4C11.403 4 12 4.59695 12 5.33333C12 6.06971 11.403 6.66667 10.6667 6.66667C9.93029 6.66667 9.33333 6.06971 9.33333 5.33333ZM3.33333 8C3.33333 7.26362 3.93029 6.66667 4.66667 6.66667C5.40305 6.66667 6 7.26362 6 8C6 8.73638 5.40305 9.33333 4.66667 9.33333C3.93029 9.33333 3.33333 8.73638 3.33333 8Z" fill="currentColor"/></svg>
+                    <span>Customize</span>
+                </button>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <svg id="themeIcon" class="theme-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.04458 1.60806C6.1589 1.35528 6.10472 1.05812 5.90855 0.861947C5.71237 0.665775 5.41522 0.611597 5.16244 0.725914C2.51258 1.92428 0.666626 4.59176 0.666626 7.69181C0.666626 11.9121 4.08786 15.3334 8.30817 15.3334C11.4082 15.3334 14.0757 13.4874 15.2741 10.8375C15.3884 10.5848 15.3342 10.2876 15.138 10.0914C14.9419 9.89526 14.6447 9.84108 14.3919 9.9554C13.6009 10.3131 12.7225 10.5126 11.7956 10.5126C8.31168 10.5126 5.4874 7.6883 5.4874 4.20438C5.4874 3.27752 5.68686 2.39905 6.04458 1.60806Z" fill="currentColor"/></svg>
+                </button>
+            </nav>
+        </header>
+
+        <!-- Customization Panel -->
+        <div class="customization-panel" id="customizationPanel">
+            <div class="sheet-handle"></div>
+            <div class="panel-header" id="panelHeader">
+                <span class="panel-title">Customization</span>
+                <svg class="panel-arrow" id="panelArrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 6.5L8 9.5L11 6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            
+            <div class="panel-content" id="panelContent">
+                <div class="control-section">
+                    <label class="control-label">Font</label>
+                    <div class="custom-select" id="fontSelect">
+                        <span class="select-value">Inter</span>
+                        <svg class="select-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 6.5L8 9.5L11 6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <div class="select-options">
+                            <div class="select-option" data-value="system">Inter</div>
+                            <div class="select-option" data-value="Suisse">Suisse Intl</div>
+                            <div class="select-option" data-value="serif">Serif</div>
+                            <div class="select-option" data-value="sans-serif">Sans Serif</div>
+                            <div class="select-option" data-value="monospace">Monospace</div>
+                            <div class="select-option" data-value="Georgia">Georgia</div>
+                            <div class="select-option" data-value="Times">Times</div>
+                            <div class="select-option" data-value="Arial">Arial</div>
+                            <div class="select-option" data-value="Helvetica">Helvetica</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <label class="control-label">Text & Content style</label>
+                    <div class="button-group">
+                        <button class="style-button" id="threeDButton" data-style="3d">
+                            <svg class="button-icon-svg" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1.5L2.5 4.5v7L8 14.5l5.5-3v-7L8 1.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><line x1="8" y1="7.5" x2="8" y2="14.5" stroke="currentColor" stroke-width="1.5"/><line x1="2.5" y1="4.5" x2="8" y2="7.5" stroke="currentColor" stroke-width="1.5"/><line x1="13.5" y1="4.5" x2="8" y2="7.5" stroke="currentColor" stroke-width="1.5"/></svg>
+                        </button>
+                        <button class="style-button" id="handDrawnButton" data-style="hand-drawn">
+                            <svg class="button-icon-svg" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.66665 14.3333L5.36616 12.9104C5.60279 12.8194 5.7211 12.7739 5.83179 12.7145C5.93012 12.6617 6.02385 12.6008 6.11201 12.5324C6.21126 12.4554 6.3009 12.3658 6.48017 12.1865L14 4.66667C14.7364 3.93029 14.7364 2.73638 14 2C13.2636 1.26362 12.0697 1.26362 11.3333 2L3.8135 9.51981C3.63423 9.69908 3.5446 9.78872 3.46758 9.88797C3.39916 9.97613 3.33825 10.0699 3.28547 10.1682C3.22605 10.2789 3.18055 10.3972 3.08954 10.6338L1.66665 14.3333ZM1.66665 14.3333L3.03873 10.766C3.13691 10.5107 3.186 10.3831 3.27021 10.3246C3.34379 10.2735 3.43485 10.2542 3.52285 10.271C3.62354 10.2902 3.72024 10.3869 3.91364 10.5803L5.4197 12.0864C5.6131 12.2798 5.7098 12.3765 5.72903 12.4772C5.74583 12.5652 5.72651 12.6562 5.67541 12.7298C5.61695 12.814 5.48931 12.8631 5.23403 12.9613L1.66665 14.3333Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <button class="style-button" id="waterButton" data-style="water">
+                            <svg class="button-icon-svg" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 14.3333C9.23768 14.3333 10.4247 13.8417 11.2998 12.9665C12.175 12.0913 12.6667 10.9043 12.6667 9.66667C12.6667 8.33333 12 7.06667 10.6667 6C9.33333 4.93333 8.33333 3.33333 8 1.66667C7.66667 3.33333 6.66667 4.93333 5.33333 6C4 7.06667 3.33333 8.33333 3.33333 9.66667C3.33333 10.9043 3.825 12.0913 4.70017 12.9665C5.57534 13.8417 6.76232 14.3333 8 14.3333Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <label class="control-label">Text color</label>
+                    <div class="custom-select color-select" id="textColorSelect">
+                        <span class="color-preview" id="colorPreview"></span>
+                        <span class="select-value" id="colorSelectValue">Default</span>
+                        <svg class="select-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 6.5L8 9.5L11 6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <div class="color-picker-panel" id="colorPickerPanel">
+                            <div class="cp-spectrum-wrap">
+                                <canvas class="cp-spectrum" id="cpSpectrum" width="196" height="140"></canvas>
+                                <div class="cp-cursor" id="cpCursor"></div>
+                            </div>
+                            <div class="cp-hue-wrap">
+                                <canvas class="cp-hue" id="cpHue" width="196" height="14"></canvas>
+                                <div class="cp-hue-cursor" id="cpHueCursor"></div>
+                            </div>
+                            <div class="cp-presets">
+                                <button class="cp-preset cp-preset-default" data-color="default" title="Default"></button>
+                                <button class="cp-preset" data-color="#000000" style="background:#000000" title="Black"></button>
+                                <button class="cp-preset" data-color="#6b7280" style="background:#6b7280" title="Gray"></button>
+                                <button class="cp-preset" data-color="#1d4ed8" style="background:#1d4ed8" title="Blue"></button>
+                                <button class="cp-preset" data-color="#059669" style="background:#059669" title="Green"></button>
+                                <button class="cp-preset" data-color="#dc2626" style="background:#dc2626" title="Red"></button>
+                                <button class="cp-preset" data-color="#7c3aed" style="background:#7c3aed" title="Purple"></button>
+                                <button class="cp-preset" data-color="#d97706" style="background:#d97706" title="Amber"></button>
+                            </div>
+                            <div class="cp-hex-row">
+                                <span class="cp-hex-label">#</span>
+                                <input class="cp-hex-input" id="cpHexInput" type="text" maxlength="6" value="000000" spellcheck="false">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-section" data-control="corner-radius">
+                    <label class="control-label">Corner radius</label>
+                    <div class="radius-slider-wrapper">
+                        <input type="range" id="radiusSlider" class="radius-slider" min="0" max="32" value="16" step="1">
+                        <span class="radius-value" id="radiusValue">16</span>
+                    </div>
+                </div>
+
+                <div class="control-section" data-control="logo-size">
+                    <label class="control-label" id="logoSizeLabel">Logo size</label>
+                    <div class="radius-slider-wrapper">
+                        <input type="range" id="logoSizeSlider" class="radius-slider" min="10" max="24" value="14" step="1">
+                        <span class="radius-value" id="logoSizeValue">14</span>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <label class="control-label">Background style</label>
+                    <div class="custom-select" id="backgroundSelect">
+                        <span class="select-value">Default</span>
+                        <svg class="select-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 6.5L8 9.5L11 6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <div class="select-options">
+                            <div class="select-option" data-value="default">Default</div>
+                            <div class="select-option" data-value="gradient-sunset">Sunset</div>
+                            <div class="select-option" data-value="gradient-ocean">Ocean</div>
+                            <div class="select-option" data-value="gradient-forest">Forest</div>
+                            <div class="select-option" data-value="gradient-lavender">Lavender</div>
+                            <div class="select-option" data-value="pattern-dots">Dots</div>
+                            <div class="select-option" data-value="pattern-grid">Grid</div>
+                            <div class="select-option" data-value="pattern-waves">Waves</div>
+                            <div class="select-option" data-value="pattern-noise">Noise</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="reset-button" id="resetButton">Reset all</button>
+            </div>
+        </div>
+
+        <main class="main-content">
+            <section class="about-section">
+                <div class="about-text">
+                    <p class="about-bio">I'm a product designer with a passion for interaction and motion. Currently, I'm the Design Lead at <a href="https://fun.xyz" class="inline-link">Fun.xyz</a>. Previously, I worked at <a href="https://0x.org" class="inline-link">0x.org</a>, <a href="https://frame.io" class="inline-link">Frame.io</a> (acq. by Adobe), and <a href="https://intercom.com" class="inline-link">Intercom</a>.</p>
+                    <p class="about-bio">You can find me at <a href="https://x.com/jakubantalik" class="inline-link">@jakubantalik</a> on <a href="https://instagram.com/jakubantalik" class="inline-link">Instagram</a> and <a href="https://linkedin.com/in/jakubantalik" class="inline-link">LinkedIn</a>, or reach me by <a href="mailto:jakubja@gmail.com" class="inline-link">email</a>.</p>
+                </div>
+            </section>
+
+            <section class="work-section">
+                <div class="work-title-wrapper">
+                    <h2 class="section-title work-title">Selected work</h2>
+                </div>
+                <div class="work-content">
+                    <!-- Work items will be added here -->
+                </div>
+                <div class="video-grid-wrapper">
+                <div class="video-grid">
+                    <div class="video-item">
+                        <video autoplay muted loop playsinline>
+                            <source src="videos/tw.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video-item">
+                        <video autoplay muted loop playsinline>
+                            <source src="videos/notification-states-3.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video-item">
+                        <video autoplay muted loop playsinline>
+                            <source src="videos/qr-code-animation.mov">
+                        </video>
+                    </div>
+                    <div class="video-item">
+                        <video autoplay muted loop playsinline>
+                            <source src="videos/install-button-3.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video-item">
+                        <video autoplay muted loop playsinline>
+                            <source src="videos/main connect wallet_7.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video-item">
+                        <video autoplay muted loop playsinline>
+                            <source src="videos/navigation-large.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video-item">
+                        <video autoplay muted loop playsinline>
+                            <source src="videos/main_1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video-item">
+                        <video autoplay muted loop playsinline>
+                            <source src="videos/toast.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video-item">
+                        <video autoplay muted loop playsinline>
+                            <source src="videos/dribbble-shot-ipad-1-1600-comp.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video-item">
+                        <img src="videos/GxBEp64W4AAO0LT.jpg" alt="">
+                    </div>
+                    <div class="video-item">
+                        <img src="videos/GbyPjNuWYAYISl9.jpg" alt="">
+                    </div>
+                    <div class="video-item">
+                        <img src="videos/Fw5-LJVXoAUrXLO.jpg" alt="">
+                    </div>
+                    <div class="video-item">
+                        <img src="videos/FvSMDQkWwAIBoXH.jpg" alt="">
+                    </div>
+                    <div class="video-item">
+                        <img src="videos/FSjF9y6WQAArBX9.jpg" alt="">
+                    </div>
+                </div>
+                </div>
+            </section>
+
+        </main>
+
+        <div class="footer-wrapper">
+            <footer class="site-footer">
+                <span>© 2026 Jakub Antalik</span>
+                <nav class="footer-links">
+                    <a href="mailto:jakubja@gmail.com">Email</a>
+                    <a href="https://x.com/jakubantalik">X (Twitter)</a>
+                    <a href="https://instagram.com/jakubantalik">Instagram</a>
+                    <a href="https://linkedin.com/in/jakubantalik">Linkedin</a>
+                </nav>
+            </footer>
+        </div>
+    </div>
+
+    <div class="sheet-overlay" id="sheetOverlay"></div>
+
+    <!-- SVG filters for hand-drawn sketch effect -->
+    <svg width="0" height="0" style="position:absolute">
+        <filter id="sketchy" filterUnits="objectBoundingBox" x="-5%" y="-5%" width="110%" height="110%">
+            <feTurbulence type="turbulence" baseFrequency="0.035 0.065" numOctaves="3" seed="2" result="noise"/>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+    </svg>
+
+    <script src="script.js"></script>
+</body>
+</html>
