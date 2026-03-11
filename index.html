@@ -255,6 +255,10 @@
             <feTurbulence type="turbulence" baseFrequency="0.035 0.065" numOctaves="3" seed="2" result="noise"/>
             <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G"/>
         </filter>
+        <filter id="sketchy-subtle" filterUnits="objectBoundingBox" x="-3%" y="-3%" width="106%" height="106%">
+            <feTurbulence type="turbulence" baseFrequency="0.03 0.05" numOctaves="2" seed="2" result="noise"/>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
     </svg>
 
     <script src="script.js"></script>

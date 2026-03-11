@@ -2425,15 +2425,15 @@ body.hand-drawn .theme-toggle:active {
 }
 
 body.hand-drawn .customization-panel {
-    border: 2px solid var(--text-color, #333) !important;
-    border-radius: 4px !important;
-    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1) !important;
-    filter: url(#sketchy);
+    border: 1.5px solid color-mix(in srgb, var(--text-color, #333) 50%, transparent) !important;
+    border-radius: 5px !important;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.07) !important;
+    filter: url(#sketchy-subtle);
 }
 
 [data-theme="dark"] body.hand-drawn .customization-panel {
-    border-color: rgba(255, 255, 255, 0.5) !important;
-    box-shadow: 3px 3px 0 rgba(255, 255, 255, 0.04) !important;
+    border-color: rgba(255, 255, 255, 0.35) !important;
+    box-shadow: 2px 2px 0 rgba(255, 255, 255, 0.03) !important;
 }
 
 body.hand-drawn .custom-select,
