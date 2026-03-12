@@ -199,19 +199,25 @@ class WaterMode {
     enable() {
         if (this.container) return;
 
+        this._isMobile = window.innerWidth <= 768;
+
         this.container = document.createElement('div');
         this.container.className = 'water-overlay';
         document.body.appendChild(this.container);
 
         const vw = window.innerWidth;
         const vh = window.innerHeight;
-        const count = 28 + Math.floor(Math.random() * 16);
+        const count = this._isMobile
+            ? 10 + Math.floor(Math.random() * 6)
+            : 28 + Math.floor(Math.random() * 16);
 
         for (let i = 0; i < count; i++) {
             this._createDrop(vw, vh, i, count);
         }
 
-        this._bindProximity();
+        if (!this._isMobile) {
+            this._bindProximity();
+        }
     }
 
     _createDrop(vw, vh, index, total) {
@@ -226,6 +232,11 @@ class WaterMode {
             size = 35 + Math.random() * 45;
         } else {
             size = 10 + Math.random() * 24;
+        }
+
+        if (this._isMobile) {
+            size = Math.min(size, 80);
+            if (sizeClass === 'raindrop--large') sizeClass = '';
         }
 
         const aspect = 0.85 + Math.random() * 0.3;
@@ -255,13 +266,13 @@ class WaterMode {
         highlight.className = 'raindrop-highlight';
         drop.appendChild(highlight);
 
-        if (size > 30) {
+        if (size > 30 && !this._isMobile) {
             const dot = document.createElement('div');
             dot.className = 'raindrop-highlight-secondary';
             drop.appendChild(dot);
         }
 
-        if (size > 50) {
+        if (size > 50 && !this._isMobile) {
             const caustic = document.createElement('div');
             caustic.className = 'raindrop-caustic';
             drop.appendChild(caustic);
@@ -279,7 +290,7 @@ class WaterMode {
         this.container.appendChild(drop);
         this.drops.push(drop);
 
-        if (size > 50 && Math.random() < 0.6) {
+        if (!this._isMobile && size > 50 && Math.random() < 0.6) {
             const satCount = 1 + Math.floor(Math.random() * 3);
             for (let s = 0; s < satCount; s++) {
                 this._createSatellite(x, y, w, h);
@@ -1136,6 +1147,10 @@ class CustomizationPanel {
         this.panel.classList.add('sheet-open');
         if (this.sheetOverlay) this.sheetOverlay.classList.add('active');
         document.body.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+        document.body.style.top = `-${window.scrollY}px`;
+        this._scrollY = window.scrollY;
         this.updateResetButtonState();
     }
 
@@ -1144,6 +1159,12 @@ class CustomizationPanel {
         this.panel.classList.remove('sheet-open');
         if (this.sheetOverlay) this.sheetOverlay.classList.remove('active');
         document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.top = '';
+        if (this._scrollY !== undefined) {
+            window.scrollTo(0, this._scrollY);
+        }
         this.closeAllSelects();
     }
 

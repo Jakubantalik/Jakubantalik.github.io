@@ -1580,7 +1580,10 @@ body {
 /* Sheet overlay */
 .sheet-overlay {
     position: fixed;
-    inset: 0;
+    top: -100px;
+    left: 0;
+    right: 0;
+    bottom: -100px;
     background: rgba(0, 0, 0, 0.1);
     z-index: 10000;
     opacity: 0;
@@ -1664,6 +1667,8 @@ body {
         background: rgba(255, 255, 255, 0.85) !important;
         width: 100% !important;
         max-width: 100% !important;
+        max-height: 85vh;
+        max-height: 85dvh;
         height: auto;
         border-radius: 24px 24px 0 0 !important;
         transform: translateY(100%);
@@ -1671,6 +1676,8 @@ body {
         z-index: 10001;
         cursor: default;
         overflow: visible;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
         padding: 8px 16px !important;
         padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px)) !important;
         margin: 0;
@@ -2491,6 +2498,20 @@ body.hand-drawn .panel-title {
     pointer-events: none;
     z-index: 99998;
     overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .water-overlay {
+        pointer-events: none !important;
+    }
+
+    .raindrop,
+    .raindrop--large {
+        pointer-events: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        will-change: auto;
+    }
 }
 
 .raindrop {
