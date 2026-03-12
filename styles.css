@@ -2475,6 +2475,14 @@ body.hand-drawn .select-options {
 body.hand-drawn .mobile-customize-btn {
     border-radius: 4px !important;
     border: 1.5px solid var(--text-muted, #999) !important;
+    filter: url(#sketchy-subtle);
+    box-shadow: 1.5px 1.5px 0 rgba(0, 0, 0, 0.07);
+    background: transparent !important;
+}
+
+[data-theme="dark"] body.hand-drawn .mobile-customize-btn {
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    box-shadow: 1.5px 1.5px 0 rgba(255, 255, 255, 0.04);
 }
 
 body.hand-drawn .control-label {

@@ -217,6 +217,8 @@ class WaterMode {
 
         if (!this._isMobile) {
             this._bindProximity();
+        } else {
+            this._bindMobileTap();
         }
     }
 
@@ -476,6 +478,32 @@ class WaterMode {
         document.addEventListener('touchmove', this._onMove, { passive: true });
     }
 
+    _bindMobileTap() {
+        this._onMobileTap = (e) => {
+            const tx = e.clientX ?? (e.changedTouches && e.changedTouches[0]?.clientX);
+            const ty = e.clientY ?? (e.changedTouches && e.changedTouches[0]?.clientY);
+            if (tx == null || ty == null) return;
+
+            for (let i = this.drops.length - 1; i >= 0; i--) {
+                const drop = this.drops[i];
+                if (drop.classList.contains('raindrop--burst')) continue;
+                const rect = drop.getBoundingClientRect();
+                if (tx >= rect.left && tx <= rect.right && ty >= rect.top && ty <= rect.bottom) {
+                    this._burstDrop(drop);
+                    break;
+                }
+            }
+        };
+        document.addEventListener('click', this._onMobileTap);
+    }
+
+    _unbindMobileTap() {
+        if (this._onMobileTap) {
+            document.removeEventListener('click', this._onMobileTap);
+            this._onMobileTap = null;
+        }
+    }
+
     _unbindProximity() {
         if (this._onMove) {
             document.removeEventListener('mousemove', this._onMove);
@@ -488,6 +516,7 @@ class WaterMode {
         if (!this.container) return;
 
         this._unbindProximity();
+        this._unbindMobileTap();
 
         this.container.style.transition = 'opacity 0.5s ease';
         this.container.style.opacity = '0';
