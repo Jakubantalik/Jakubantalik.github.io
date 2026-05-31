@@ -1,4 +1,28 @@
 // Theme Manager
+const THEME_MEDIA_ASSETS = {
+    light: [
+        'tw.mp4',
+        'notification-states-3.mp4',
+        'qr-code-animation.mov',
+        'main connect wallet_7.mp4',
+        'main_1.mp4',
+        'toast.mp4',
+        'FSjF9y6WQAArBX9.jpg',
+        'FvSMDQkWwAIBoXH.jpg',
+        'Fw5-LJVXoAUrXLO.jpg',
+        'GbyPjNuWYAYISl9.jpg'
+    ],
+    dark: [
+        'border-beam.mp4',
+        'dribbble-shot-ipad-1-1600-comp.mp4',
+        'input.mp4',
+        'install-button-3.mp4',
+        'metal.mp4',
+        'navigation-large.mp4',
+        'GxBEp64W4AAO0LT.jpg'
+    ]
+};
+
 class ThemeManager {
     constructor() {
         this.initializeTheme();
@@ -31,11 +55,37 @@ class ThemeManager {
         document.documentElement.setAttribute('data-theme', theme);
         this.updateThemeIcon(theme);
         this.updateTwitterTheme(theme);
+        this.updateGalleryMedia(theme);
         
         // Force refresh any text customizations to respect new theme
         if (window.customizationPanelInstance) {
             window.customizationPanelInstance.applyTextColor();
             window.customizationPanelInstance.applyBackgroundStyle();
+        }
+    }
+
+    updateGalleryMedia(theme) {
+        const grid = document.querySelector('.video-grid');
+        if (!grid) return;
+
+        const assets = THEME_MEDIA_ASSETS[theme] || THEME_MEDIA_ASSETS.light;
+        const html = assets.map((filename) => {
+            const src = `videos/${theme}/${filename}`;
+            const extension = filename.split('.').pop().toLowerCase();
+            const isVideo = ['mp4', 'mov', 'webm'].includes(extension);
+
+            if (isVideo) {
+                const type = extension === 'mov' ? '' : ` type="video/${extension}"`;
+                return `<div class="video-item"><video autoplay muted loop playsinline><source src="${src}"${type}></video></div>`;
+            }
+
+            return `<div class="video-item"><img src="${src}" alt=""></div>`;
+        }).join('');
+
+        grid.innerHTML = html;
+
+        if (window.videoHandlerInstance) {
+            window.videoHandlerInstance.refresh();
         }
     }
 
@@ -2317,6 +2367,15 @@ document.head.appendChild(style);
 // Video Gallery Handler
 class VideoHandler {
     constructor() {
+        this.observer = null;
+        this.initializeVideos();
+        this.setupIntersectionObserver();
+    }
+
+    refresh() {
+        if (this.observer) {
+            this.observer.disconnect();
+        }
         this.initializeVideos();
         this.setupIntersectionObserver();
     }
@@ -2376,7 +2435,7 @@ class VideoHandler {
             rootMargin: '50px'
         };
 
-        const observer = new IntersectionObserver((entries) => {
+        this.observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 const video = entry.target.querySelector('video');
                 if (video) {
@@ -2394,7 +2453,7 @@ class VideoHandler {
 
         // Observe all video items
         document.querySelectorAll('.video-item').forEach(item => {
-            observer.observe(item);
+            this.observer.observe(item);
         });
     }
 }
@@ -2632,7 +2691,7 @@ class ParticleEasterEgg {
 document.addEventListener('DOMContentLoaded', () => {
     new ThemeManager();
     window.customizationPanelInstance = new CustomizationPanel();
-    new VideoHandler();
+    window.videoHandlerInstance = new VideoHandler();
 
     // Easter egg: particles on logo click
     const logo = document.querySelector('.name');

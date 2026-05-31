@@ -273,6 +273,10 @@ body {
     margin-bottom: 0;
 }
 
+.desktop-break {
+    display: block;
+}
+
 /* 3D Perspective effect */
 .perspective-container {
     perspective: 800px;
@@ -541,6 +545,10 @@ body {
 
 /* Responsive design */
 @media (max-width: 768px) {
+    .desktop-break {
+        display: none;
+    }
+
     .container {
         padding: 36px 20px 40px 20px;
     }
