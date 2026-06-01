@@ -801,6 +801,10 @@ body {
         margin-bottom: 8px;
     }
 
+    .project-card {
+        align-items: flex-start;
+    }
+
 }
 
 @media (max-width: 480px) {
