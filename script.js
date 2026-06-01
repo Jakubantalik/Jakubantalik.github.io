@@ -68,18 +68,23 @@ class ThemeManager {
         const grid = document.querySelector('.video-grid');
         if (!grid) return;
 
+        const lqipMap = window.LQIP || {};
         const assets = THEME_MEDIA_ASSETS[theme] || THEME_MEDIA_ASSETS.light;
         const html = assets.map((filename) => {
             const src = `videos/${theme}/${filename}`;
             const extension = filename.split('.').pop().toLowerCase();
             const isVideo = ['mp4', 'mov', 'webm'].includes(extension);
 
+            const lqip = lqipMap[src];
+            const itemClass = lqip ? 'video-item has-lqip' : 'video-item';
+            const itemStyle = lqip ? ` style="--lqip:url('${lqip}')"` : '';
+
             if (isVideo) {
                 const type = extension === 'mov' ? '' : ` type="video/${extension}"`;
-                return `<div class="video-item"><video autoplay muted loop playsinline><source src="${src}"${type}></video></div>`;
+                return `<div class="${itemClass}"${itemStyle}><video autoplay muted loop playsinline preload="metadata"><source src="${src}"${type}></video></div>`;
             }
 
-            return `<div class="video-item"><img src="${src}" alt=""></div>`;
+            return `<div class="${itemClass}"${itemStyle}><img src="${src}" alt=""></div>`;
         }).join('');
 
         grid.innerHTML = html;
@@ -2744,11 +2749,44 @@ class ParticleEasterEgg {
 }
 
 // Initialize components when DOM is loaded
+// LQIP for project thumbnails: theme-aware blurred placeholder that clears on load
+function initProjectThumbnailLqip() {
+    const lqipMap = window.LQIP || {};
+    document.querySelectorAll('.project-icon').forEach((icon) => {
+        const imgs = icon.querySelectorAll('.project-icon-img');
+        let lightLqip, darkLqip;
+
+        imgs.forEach((img) => {
+            const lqip = lqipMap[img.getAttribute('src')];
+            if (!lqip) return;
+            if (img.classList.contains('project-icon-img--dark')) {
+                darkLqip = lqip;
+            } else {
+                lightLqip = lqip;
+            }
+        });
+
+        if (lightLqip) icon.style.setProperty('--lqip-light', `url('${lightLqip}')`);
+        if (darkLqip) icon.style.setProperty('--lqip-dark', `url('${darkLqip}')`);
+
+        const markLoaded = () => icon.classList.add('loaded');
+        imgs.forEach((img) => {
+            if (img.complete && img.naturalWidth > 0) {
+                markLoaded();
+            } else {
+                img.addEventListener('load', markLoaded, { once: true });
+                img.addEventListener('error', markLoaded, { once: true });
+            }
+        });
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     new ThemeManager();
     window.customizationPanelInstance = new CustomizationPanel();
     window.videoHandlerInstance = new VideoHandler();
     window.workTabsInstance = new WorkTabs();
+    initProjectThumbnailLqip();
 
     // Easter egg: particles on logo click
     const logo = document.querySelector('.name');
