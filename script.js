@@ -1496,6 +1496,13 @@ class CustomizationPanel {
             if (media) media.style.borderRadius = `${r}px`;
         });
 
+        // Project cards (Projects tab)
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.style.borderRadius = `${r}px`;
+            const icon = card.querySelector('.project-icon');
+            if (icon) icon.style.borderRadius = `${inner}px`;
+        });
+
         // Customization panel outer shell (desktop only — mobile uses sheet border-radius)
         if (window.innerWidth > 768) {
             this.panel.style.borderRadius = `${r}px`;
@@ -1544,12 +1551,14 @@ class CustomizationPanel {
             navEl,
             this.aboutText,
             document.querySelector('.work-title'),
+            document.querySelector('.work-tabs'),
+            document.querySelector('.projects-list'),
             document.querySelector('.video-grid'),
             footerEl
         ].filter(Boolean);
 
         targets.forEach(target => {
-            const wrapper = target.closest('.header') || target.closest('.about-section') || target.closest('.work-title-wrapper') || target.closest('.video-grid-wrapper') || target.closest('.footer-wrapper') || target.parentElement;
+            const wrapper = target.closest('.header') || target.closest('.about-section') || target.closest('.work-title-wrapper') || target.closest('.video-grid-wrapper') || target.closest('.work-tabs-stage') || target.closest('.footer-wrapper') || target.parentElement;
             if (!wrapper) return;
 
             if (this.settings.is3D) {
