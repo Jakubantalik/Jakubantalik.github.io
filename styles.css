@@ -1,6 +1,6 @@
 /* CSS Variables for theming */
 :root {
-    --bg-color: #fff;
+    --bg-color: #fdfdfd;
     --text-color: #333;
     --text-secondary: #666;
     --text-muted: #999;
@@ -277,6 +277,218 @@ body {
     display: block;
 }
 
+.or-inline-space {
+    display: none;
+}
+
+/* Work section tabs (pill tabs reused from the transitions skill) */
+.work-tabs {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 24px;
+}
+
+.work-tab-btn {
+    height: 36px;
+    padding: 0 16px;
+    border: 0;
+    background: transparent;
+    border-radius: 50px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: background-color 120ms ease, color 120ms ease;
+}
+
+.work-tab-btn:hover {
+    background: color-mix(in srgb, var(--text-color) 6%, transparent);
+    color: var(--text-color);
+}
+
+.work-tab-btn[aria-selected="true"] {
+    background: color-mix(in srgb, var(--text-color) 8%, transparent);
+    color: var(--text-color);
+}
+
+/* Page transition (slide + fade + blur), tuned to the skill defaults */
+.work-tabs-stage {
+    position: relative;
+    --tab-slide-distance: 8px;
+    --tab-slide-dur: 220ms;
+    --tab-blur: 3px;
+    --tab-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.work-tab-panel {
+    display: none;
+}
+
+.work-tab-panel.is-active {
+    display: block;
+    animation: work-panel-enter var(--tab-slide-dur) var(--tab-ease) both;
+}
+
+.work-tab-panel[data-panel="projects"] { --tab-enter-x: calc(var(--tab-slide-distance) * -1); }
+.work-tab-panel[data-panel="selected"] { --tab-enter-x: var(--tab-slide-distance); }
+
+@keyframes work-panel-enter {
+    from {
+        opacity: 0;
+        transform: translateX(var(--tab-enter-x, 0));
+        filter: blur(var(--tab-blur));
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+        filter: blur(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .work-tab-panel.is-active {
+        animation: none;
+    }
+}
+
+/* Projects list (Figma node 500:71) */
+.projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 600px;
+}
+
+.project-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border-radius: 16px;
+    background-color: #ffffff;
+    box-shadow:
+        0 1px 3px 0 rgba(0, 0, 0, 0.04),
+        inset 0 0 0 1px rgba(0, 0, 0, 0.06),
+        inset 0 -1px 0 0 rgba(0, 0, 0, 0.06);
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: box-shadow 0.15s ease, background-color 0.2s ease;
+}
+
+[data-theme="dark"] .project-card {
+    background-color: #181818;
+    box-shadow:
+        0 1px 3px 0 rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.04),
+        inset 0 0 0 1px rgba(0, 0, 0, 0.06),
+        inset 0 -1px 0 0 rgba(0, 0, 0, 0.06),
+        inset 0 0 0 1px rgba(196, 196, 196, 0.07);
+}
+
+.project-card:hover {
+    background-color: color-mix(in srgb, #ffffff 99%, #000 1%);
+}
+
+[data-theme="dark"] .project-card:hover {
+    background-color: color-mix(in srgb, #181818 99.5%, #fff 0.5%);
+}
+
+.project-icon {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+}
+
+.project-icon-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Inset bezel/ring overlay sitting on top of the thumbnail (Figma) */
+.project-icon::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    box-shadow:
+        inset 0 -1px 0 0 rgba(0, 0, 0, 0.06),
+        inset 0 0 0 1px rgba(0, 0, 0, 0.04),
+        inset 0 0 0 1px rgba(191, 192, 203, 0.1);
+}
+
+[data-theme="dark"] .project-icon::after {
+    box-shadow:
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.04),
+        inset 0 -1px 0 0 rgba(0, 0, 0, 0.06),
+        inset 0 0 0 1px rgba(0, 0, 0, 0.04),
+        inset 0 0 0 1px rgba(191, 192, 203, 0.1);
+}
+
+.project-icon-img--dark {
+    display: none;
+}
+
+[data-theme="dark"] .project-icon-img--light {
+    display: none;
+}
+
+[data-theme="dark"] .project-icon-img--dark {
+    display: block;
+}
+
+.project-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.project-title {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 21px;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.project-desc {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 21px;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* Hover arrow — Figma node 504:174 (top:10px, right:10px, 16x16) */
+.project-arrow {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 16px;
+    height: 16px;
+    color: var(--text-muted);
+    opacity: 0;
+    transition: opacity 0.1s ease;
+    pointer-events: none;
+}
+
+.project-card:hover .project-arrow,
+.project-card:focus-visible .project-arrow {
+    opacity: 1;
+    transition: opacity 0.2s ease;
+}
+
 /* 3D Perspective effect */
 .perspective-container {
     perspective: 800px;
@@ -547,6 +759,10 @@ body {
 @media (max-width: 768px) {
     .desktop-break {
         display: none;
+    }
+
+    .or-inline-space {
+        display: inline;
     }
 
     .container {

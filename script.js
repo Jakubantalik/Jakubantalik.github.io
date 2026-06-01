@@ -2459,6 +2459,53 @@ class VideoHandler {
 }
 
 
+// Work section tabs — Projects / Selected work
+class WorkTabs {
+    constructor() {
+        this.stage = document.getElementById('workTabsStage');
+        this.tabs = [
+            { id: 'projects', btn: document.getElementById('tabProjects'), panel: document.getElementById('panelProjects') },
+            { id: 'selected', btn: document.getElementById('tabSelected'), panel: document.getElementById('panelSelected') }
+        ];
+        if (!this.stage) return;
+        this.bindEvents();
+    }
+
+    bindEvents() {
+        this.tabs.forEach((tab, index) => {
+            if (!tab.btn) return;
+            tab.btn.addEventListener('click', () => this.select(tab.id));
+            tab.btn.addEventListener('keydown', (e) => {
+                if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+                e.preventDefault();
+                const dir = e.key === 'ArrowRight' ? 1 : -1;
+                const next = this.tabs[(index + dir + this.tabs.length) % this.tabs.length];
+                this.select(next.id);
+                if (next.btn) next.btn.focus();
+            });
+        });
+    }
+
+    select(id) {
+        this.tabs.forEach(tab => {
+            const active = tab.id === id;
+            if (tab.btn) tab.btn.setAttribute('aria-selected', String(active));
+            if (tab.panel) {
+                // Re-trigger the enter animation by toggling the class fresh.
+                tab.panel.classList.toggle('is-active', active);
+            }
+        });
+        this.stage.setAttribute('data-active', id);
+
+        // The Selected work videos live in a hidden panel until shown, so
+        // (re)initialize playback once the panel becomes visible.
+        if (id === 'selected' && window.videoHandlerInstance) {
+            window.videoHandlerInstance.refresh();
+        }
+    }
+}
+
+
 // Debug function to clear all localStorage
 window.clearAllSettings = function() {
     localStorage.clear();
@@ -2692,6 +2739,7 @@ document.addEventListener('DOMContentLoaded', () => {
     new ThemeManager();
     window.customizationPanelInstance = new CustomizationPanel();
     window.videoHandlerInstance = new VideoHandler();
+    window.workTabsInstance = new WorkTabs();
 
     // Easter egg: particles on logo click
     const logo = document.querySelector('.name');

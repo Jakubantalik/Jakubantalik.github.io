@@ -155,17 +155,62 @@
             <section class="about-section">
                 <div class="about-text">
                     <p class="about-bio">I'm a product designer with a passion for interaction and motion. Currently, I'm the Design Lead at <a href="https://fun.xyz" class="inline-link">Fun.xyz</a>. Previously, I worked at <a href="https://0x.org" class="inline-link">0x.org</a>, <a href="https://frame.io" class="inline-link">Frame.io</a> (acq. by Adobe), and <a href="https://intercom.com" class="inline-link">Intercom</a>.</p>
-                    <p class="about-bio">You can find me at <a href="https://x.com/jakubantalik" class="inline-link">@jakubantalik</a> on <a href="https://github.com/Jakubantalik" class="inline-link">GitHub</a>, <a href="https://instagram.com/jakubantalik" class="inline-link">Instagram</a> and <a href="https://linkedin.com/in/jakubantalik" class="inline-link">LinkedIn</a>,<br class="desktop-break"> or reach me by <a href="mailto:jakubja@gmail.com" class="inline-link">email</a>.</p>
+                    <p class="about-bio">You can find me at <a href="https://x.com/jakubantalik" class="inline-link">@jakubantalik</a> on <a href="https://github.com/Jakubantalik" class="inline-link">GitHub</a>, <a href="https://instagram.com/jakubantalik" class="inline-link">Instagram</a> and <a href="https://linkedin.com/in/jakubantalik" class="inline-link">LinkedIn</a>,<br class="desktop-break"><span class="or-inline-space"> </span>or reach me by <a href="mailto:jakubja@gmail.com" class="inline-link">email</a>.</p>
                 </div>
             </section>
 
             <section class="work-section">
-                <div class="work-title-wrapper">
-                    <h2 class="section-title work-title">Selected work</h2>
+                <div class="work-tabs" role="tablist" aria-label="Work sections">
+                    <button id="tabProjects" class="work-tab-btn" role="tab" aria-selected="true" aria-controls="panelProjects" type="button">Projects</button>
+                    <button id="tabSelected" class="work-tab-btn" role="tab" aria-selected="false" aria-controls="panelSelected" type="button">Selected work</button>
                 </div>
-                <div class="work-content">
-                    <!-- Work items will be added here -->
-                </div>
+
+                <div class="work-tabs-stage" id="workTabsStage" data-active="projects">
+                    <div class="work-tab-panel projects-panel is-active" id="panelProjects" role="tabpanel" aria-labelledby="tabProjects" data-panel="projects">
+                        <div class="projects-list">
+                            <a class="project-card" href="https://transitions.dev" target="_blank" rel="noopener noreferrer">
+                                <span class="project-icon">
+                                    <img class="project-icon-img project-icon-img--light" src="imgs/transitions-light-th.jpg" alt="Transitions.dev" width="72" height="72">
+                                    <img class="project-icon-img project-icon-img--dark" src="imgs/transitions-dark-th.jpg" alt="" width="72" height="72">
+                                </span>
+                                <div class="project-info">
+                                    <p class="project-title">Transitions.dev</p>
+                                    <p class="project-desc">Collection of the most essential transitions for web apps that you can just copy and paste into any project.</p>
+                                </div>
+                                <svg class="project-arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                    <path d="M4.5 11.5 L11.5 4.5 M5.5 4.5 H11.5 V10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </a>
+
+                            <a class="project-card" href="https://beam.jakubantalik.com" target="_blank" rel="noopener noreferrer">
+                                <span class="project-icon">
+                                    <img class="project-icon-img" src="imgs/beam-th.jpg" alt="Border beam component" width="72" height="72">
+                                </span>
+                                <div class="project-info">
+                                    <p class="project-title">Border beam component</p>
+                                    <p class="project-desc">Animated Border Beam is a customizable React component that creates a smooth, animated beam effect traveling around the border.</p>
+                                </div>
+                                <svg class="project-arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                    <path d="M4.5 11.5 L11.5 4.5 M5.5 4.5 H11.5 V10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </a>
+
+                            <a class="project-card" href="https://metal.jakubantalik.com" target="_blank" rel="noopener noreferrer">
+                                <span class="project-icon">
+                                    <img class="project-icon-img" src="imgs/metal-th.jpg" alt="Liquid metal component" width="72" height="72">
+                                </span>
+                                <div class="project-info">
+                                    <p class="project-title">Liquid metal component</p>
+                                    <p class="project-desc">Animated liquid metal border component for React, with dynamic fluid-like reflections, smooth motion effects.</p>
+                                </div>
+                                <svg class="project-arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                    <path d="M4.5 11.5 L11.5 4.5 M5.5 4.5 H11.5 V10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="work-tab-panel selected-panel" id="panelSelected" role="tabpanel" aria-labelledby="tabSelected" data-panel="selected">
                 <div class="video-grid-wrapper">
                 <div class="video-grid">
                     <div class="video-item">
@@ -229,6 +274,8 @@
                         <img src="videos/FSjF9y6WQAArBX9.jpg" alt="">
                     </div>
                 </div>
+                </div>
+                    </div>
                 </div>
             </section>
 
