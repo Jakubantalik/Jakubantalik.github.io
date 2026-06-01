@@ -77,14 +77,14 @@ class ThemeManager {
 
             const lqip = lqipMap[src];
             const itemClass = lqip ? 'video-item has-lqip' : 'video-item';
-            const itemStyle = lqip ? ` style="--lqip:url('${lqip}')"` : '';
+            const placeholder = lqip ? `<img class="video-lqip" src="${lqip}" alt="" aria-hidden="true">` : '';
 
             if (isVideo) {
                 const type = extension === 'mov' ? '' : ` type="video/${extension}"`;
-                return `<div class="${itemClass}"${itemStyle}><video autoplay muted loop playsinline preload="metadata"><source src="${src}"${type}></video></div>`;
+                return `<div class="${itemClass}">${placeholder}<video autoplay muted loop playsinline preload="metadata"><source src="${src}"${type}></video></div>`;
             }
 
-            return `<div class="${itemClass}"${itemStyle}><img src="${src}" alt=""></div>`;
+            return `<div class="${itemClass}">${placeholder}<img class="video-media" src="${src}" alt=""></div>`;
         }).join('');
 
         grid.innerHTML = html;
@@ -2421,7 +2421,7 @@ class VideoHandler {
             });
         });
 
-        const images = document.querySelectorAll('.video-item img');
+        const images = document.querySelectorAll('.video-item img:not(.video-lqip)');
         images.forEach(img => {
             const fadeIn = () => {
                 img.style.opacity = '0';

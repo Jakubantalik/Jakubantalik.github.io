@@ -414,6 +414,12 @@ body {
     height: 100%;
     object-fit: cover;
     display: block;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.project-icon.loaded .project-icon-img {
+    opacity: 1;
 }
 
 /* LQIP: blurred low-quality placeholder behind the thumbnail */
@@ -683,18 +689,22 @@ body {
 .video-item {
     position: relative;
     overflow: hidden;
-    background: #f0f0f0;
     border-radius: 16px;
     margin-bottom: 24px;
     break-inside: avoid;
+}
+
+/* Skeleton fallback only for items without an LQIP placeholder */
+.video-item:not(.has-lqip) {
+    background: #f0f0f0;
     min-height: 180px;
 }
 
-[data-theme="dark"] .video-item {
+[data-theme="dark"] .video-item:not(.has-lqip) {
     background: rgba(255, 255, 255, 0.04);
 }
 
-.video-item::before {
+.video-item:not(.has-lqip)::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -704,16 +714,16 @@ body {
     border-radius: inherit;
 }
 
-[data-theme="dark"] .video-item::before {
+[data-theme="dark"] .video-item:not(.has-lqip)::before {
     background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%);
 }
 
-.video-item.loaded {
+.video-item:not(.has-lqip).loaded {
     background: transparent;
     min-height: 0;
 }
 
-.video-item.loaded::before {
+.video-item:not(.has-lqip).loaded::before {
     display: none;
 }
 
@@ -732,15 +742,52 @@ body {
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: var(--custom-radius, 16px);
     pointer-events: none;
-    z-index: 1;
+    z-index: 2;
 }
 
 [data-theme="dark"] .video-item::after {
     border-color: rgba(255, 255, 255, 0.1);
 }
 
-.video-item video,
-.video-item img {
+/* LQIP placeholder: in-flow, sizes the card to the media's real aspect ratio
+   so it never resizes when the full media loads. */
+.video-item .video-lqip {
+    position: relative;
+    z-index: 0;
+    width: calc(100% + 20px);
+    height: auto;
+    display: block;
+    border-radius: 16px;
+    margin: -10px;
+    filter: blur(12px);
+    transform: scale(1.04);
+}
+
+/* Real media overlays the placeholder; fades in once loaded. */
+.video-item.has-lqip video,
+.video-item.has-lqip .video-media {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    z-index: 1;
+    width: calc(100% + 20px);
+    height: auto;
+    max-height: none;
+    object-fit: contain;
+    display: block;
+    border-radius: 16px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.video-item.has-lqip.loaded video,
+.video-item.has-lqip.loaded .video-media {
+    opacity: 1;
+}
+
+/* Items without an LQIP keep the original in-flow sizing */
+.video-item:not(.has-lqip) video,
+.video-item:not(.has-lqip) img {
     position: relative;
     z-index: 1;
     width: calc(100% + 20px);
@@ -750,22 +797,6 @@ body {
     display: block;
     border-radius: 16px;
     margin: -10px;
-}
-
-/* LQIP: blurred low-quality placeholder behind grid media */
-.video-item.has-lqip::before {
-    background: var(--lqip) center / cover no-repeat;
-    filter: blur(16px);
-    transform: scale(1.2);
-    animation: none;
-    opacity: 1;
-    z-index: 0;
-    transition: opacity 0.6s ease;
-}
-
-.video-item.has-lqip.loaded::before {
-    display: block;
-    opacity: 0;
 }
 
 
