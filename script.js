@@ -1,6 +1,7 @@
 // Theme Manager
 const THEME_MEDIA_ASSETS = {
     light: [
+        'image-loader-tw_1.mp4',
         'tw.mp4',
         'notification-states-3.mp4',
         'qr-code-animation.mov',
