@@ -422,29 +422,19 @@ body {
     opacity: 1;
 }
 
-/* LQIP: blurred low-quality placeholder behind the thumbnail */
-.project-icon::before {
-    content: "";
+/* LQIP: real blurred placeholder image behind the thumbnail.
+   Single-class selector so the theme display rules below can override it. */
+.project-lqip {
     position: absolute;
     inset: 0;
-    border-radius: inherit;
-    background-image: var(--lqip-light);
-    background-size: cover;
-    background-position: center;
-    filter: blur(8px);
-    transform: scale(1.2);
     z-index: 0;
-    opacity: 1;
-    transition: opacity 0.5s ease;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: blur(8px);
+    transform: scale(1.1);
     pointer-events: none;
-}
-
-[data-theme="dark"] .project-icon::before {
-    background-image: var(--lqip-dark, var(--lqip-light));
-}
-
-.project-icon.loaded::before {
-    opacity: 0;
 }
 
 /* Inset bezel/ring overlay sitting on top of the thumbnail (Figma) */
@@ -868,10 +858,17 @@ body {
         min-width: auto;
     }
 
+    .work-tab-panel .video-grid-wrapper {
+        width: auto;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
     .work-section .video-grid {
         column-count: 1;
         column-gap: 0;
-        padding: 0 8px;
+        padding: 0;
+        margin: 0;
     }
 
     .video-item {
@@ -899,10 +896,17 @@ body {
         gap: 8px;
     }
 
+    .work-tab-panel .video-grid-wrapper {
+        width: auto;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
     .work-section .video-grid {
         column-count: 1;
         column-gap: 0;
-        padding: 0 8px;
+        padding: 0;
+        margin: 0;
     }
 
     .video-item {

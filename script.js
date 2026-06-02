@@ -2754,20 +2754,22 @@ function initProjectThumbnailLqip() {
     const lqipMap = window.LQIP || {};
     document.querySelectorAll('.project-icon').forEach((icon) => {
         const imgs = icon.querySelectorAll('.project-icon-img');
-        let lightLqip, darkLqip;
 
         imgs.forEach((img) => {
             const lqip = lqipMap[img.getAttribute('src')];
             if (!lqip) return;
-            if (img.classList.contains('project-icon-img--dark')) {
-                darkLqip = lqip;
-            } else {
-                lightLqip = lqip;
-            }
-        });
 
-        if (lightLqip) icon.style.setProperty('--lqip-light', `url('${lightLqip}')`);
-        if (darkLqip) icon.style.setProperty('--lqip-dark', `url('${darkLqip}')`);
+            const ph = document.createElement('img');
+            ph.className = 'project-lqip';
+            // Mirror the theme modifier so the existing light/dark display
+            // rules show the matching placeholder per theme.
+            if (img.classList.contains('project-icon-img--light')) ph.classList.add('project-icon-img--light');
+            if (img.classList.contains('project-icon-img--dark')) ph.classList.add('project-icon-img--dark');
+            ph.src = lqip;
+            ph.alt = '';
+            ph.setAttribute('aria-hidden', 'true');
+            icon.insertBefore(ph, icon.firstChild);
+        });
 
         const markLoaded = () => icon.classList.add('loaded');
         imgs.forEach((img) => {
