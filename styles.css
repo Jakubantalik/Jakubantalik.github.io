@@ -10,6 +10,20 @@
     --shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
+/* No-JS fallback: follow the system theme until the toggle sets data-theme explicitly. */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --bg-color: #0f0f0f;
+        --text-color: #e4e4e7;
+        --text-secondary: #a1a1aa;
+        --text-muted: #71717a;
+        --border-color: #27272a;
+        --card-bg: rgba(24, 24, 27, 0.95);
+        --hover-bg: #18181b;
+        --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+}
+
 [data-theme="dark"] {
     --bg-color: #0f0f0f;
     --text-color: #e4e4e7;
