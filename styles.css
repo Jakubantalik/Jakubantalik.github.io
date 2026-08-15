@@ -241,6 +241,7 @@ body {
     color: var(--text-color);
     margin-bottom: 0;
     white-space: pre-wrap;
+    text-wrap: pretty;
 }
 
 .about-bio + .about-bio {
@@ -484,6 +485,7 @@ body {
     line-height: 21px;
     color: var(--text-color);
     margin: 0;
+    text-wrap: balance;
 }
 
 .project-desc {
@@ -492,6 +494,7 @@ body {
     line-height: 21px;
     color: var(--text-secondary);
     margin: 0;
+    text-wrap: pretty;
 }
 
 /* Hover arrow — Figma node 504:174 (top:10px, right:10px, 16x16) */
