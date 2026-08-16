@@ -565,6 +565,17 @@ body {
     transform-origin: left center;
 }
 
+/* The tabs sit at the top of a section that grows to the height of the active
+   panel, so a centred vanishing point lands ~1000px below them and shears the
+   pills apart. Anchor the perspective to the tabs instead. */
+.work-section.perspective-container {
+    perspective-origin: left top;
+}
+
+.work-tabs.perspective-distant {
+    transform-origin: left center;
+}
+
 .video-grid.perspective-distant {
     transform-origin: center center;
 }
