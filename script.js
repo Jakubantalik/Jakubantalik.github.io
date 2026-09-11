@@ -1,6 +1,9 @@
 // Theme Manager
 const THEME_MEDIA_ASSETS = {
     light: [
+        'gooey-effect.mp4',
+        'thinking-orbs.mp4',
+        'trasnsitions-update-2.mp4',
         'image-loader-tw_1.mp4',
         'tw.mp4',
         'notification-states-3.mp4',
@@ -14,6 +17,9 @@ const THEME_MEDIA_ASSETS = {
         'GbyPjNuWYAYISl9.jpg'
     ],
     dark: [
+        'metal-v2.mp4',
+        'thinking-orbs.mp4',
+        'libraries.mp4',
         'border-beam.mp4',
         'dribbble-shot-ipad-1-1600-comp.mp4',
         'input.mp4',
@@ -33,6 +39,8 @@ class ThemeManager {
     initializeTheme() {
         this.themeToggle = document.getElementById('themeToggle');
         this.themeIcon = document.getElementById('themeIcon');
+        this.singleColumnQuery = window.matchMedia('(max-width: 768px)');
+        this.singleColumnQuery.addEventListener('change', () => this.updateGalleryMedia(this.currentTheme));
         
         const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         this.currentTheme = systemPrefersDark ? 'dark' : 'light';
@@ -71,7 +79,7 @@ class ThemeManager {
 
         const lqipMap = window.LQIP || {};
         const assets = THEME_MEDIA_ASSETS[theme] || THEME_MEDIA_ASSETS.light;
-        const html = assets.map((filename) => {
+        const items = assets.map((filename) => {
             const src = `videos/${theme}/${filename}`;
             const extension = filename.split('.').pop().toLowerCase();
             const isVideo = ['mp4', 'mov', 'webm'].includes(extension);
@@ -86,9 +94,14 @@ class ThemeManager {
             }
 
             return `<div class="${itemClass}">${placeholder}<img class="video-media" src="${src}" alt=""></div>`;
-        }).join('');
+        });
 
-        grid.innerHTML = html;
+        // Deal items into columns left-to-right so the list order reads as rows
+        // (CSS multi-column would fill the left column top-to-bottom first).
+        const columns = this.singleColumnQuery.matches
+            ? [items]
+            : [items.filter((_, i) => i % 2 === 0), items.filter((_, i) => i % 2 === 1)];
+        grid.innerHTML = columns.map((column) => `<div class="video-col">${column.join('')}</div>`).join('');
 
         if (window.videoHandlerInstance) {
             window.videoHandlerInstance.refresh();

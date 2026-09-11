@@ -486,6 +486,24 @@ body {
     display: block;
 }
 
+/* Glyph icons: a flat tile with the mark centred, instead of a cover thumbnail (Figma 1515:41370) */
+.project-icon--glyph {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+}
+
+[data-theme="dark"] .project-icon--glyph {
+    background-color: #262626;
+}
+
+.project-icon--glyph .project-icon-img {
+    width: 28px;
+    height: 18px;
+    object-fit: contain;
+}
+
 .project-info {
     display: flex;
     flex-direction: column;
@@ -696,12 +714,19 @@ body {
 }
 
 .work-section .video-grid {
-    column-count: 2;
-    column-gap: 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
     width: 100%;
     margin: 24px 0 0;
     padding: 0 24px;
     box-sizing: border-box;
+}
+
+/* Items are dealt into these by updateGalleryMedia(); one column under 768px. */
+.video-col {
+    flex: 1 1 0;
+    min-width: 0;
 }
 
 .video-item {
@@ -893,8 +918,7 @@ body {
     }
 
     .work-section .video-grid {
-        column-count: 1;
-        column-gap: 0;
+        gap: 0;
         padding: 0;
         margin: 0;
     }
@@ -931,8 +955,7 @@ body {
     }
 
     .work-section .video-grid {
-        column-count: 1;
-        column-gap: 0;
+        gap: 0;
         padding: 0;
         margin: 0;
     }
