@@ -415,6 +415,7 @@ body {
     color: var(--text-secondary);
     opacity: 0.79;
     white-space: nowrap;
+    font-variant-numeric: tabular-nums;
 }
 
 [data-theme="dark"] .project-stat {

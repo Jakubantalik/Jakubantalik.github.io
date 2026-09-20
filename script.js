@@ -2806,12 +2806,99 @@ function initProjectThumbnailLqip() {
     });
 }
 
+// Libraries.dev card: live combined npm installs, all-time, same source and
+// method as the badge in the libraries.dev header. npm has no all-time
+// endpoint, so this walks /downloads/range (max 18 months per call) from
+// before the first publish to today and sums every package. Cached 1h.
+function initLibrariesInstallCount() {
+    const el = document.getElementById('librariesInstalls');
+    if (!el) return;
+
+    const KEY = 'libraries-installs-total';
+    const TTL = 60 * 60 * 1000;
+    const PKGS = ['border-beam', 'thinking-orbs', 'liquid-gooey', 'metal-fx', 'img-fx'];
+    const START = '2026-01-01'; // earlier than the first package (2026-04-12)
+    const MAX_MONTHS = 17;      // one under npm's limit
+
+    const paint = (n) => { el.textContent = n.toLocaleString('en-US'); };
+    const iso = (d) => d.toISOString().slice(0, 10);
+
+    try {
+        const c = JSON.parse(sessionStorage.getItem(KEY) || 'null');
+        if (c && Date.now() - c.t < TTL) { paint(c.n); return; }
+    } catch (e) {}
+
+    const windows = [];
+    let cursor = new Date(START + 'T00:00:00Z');
+    const today = new Date();
+    while (cursor < today) {
+        let end = new Date(cursor);
+        end.setUTCMonth(end.getUTCMonth() + MAX_MONTHS);
+        if (end > today) end = today;
+        windows.push(iso(cursor) + ':' + iso(end));
+        cursor = new Date(end);
+        cursor.setUTCDate(cursor.getUTCDate() + 1);
+    }
+
+    Promise.all(PKGS.map((pkg) =>
+        Promise.all(windows.map((w) =>
+            fetch('https://api.npmjs.org/downloads/range/' + w + '/' + pkg)
+                .then((r) => r.json())
+                .then((d) => (d && d.downloads ? d.downloads.reduce((a, day) => a + (day.downloads || 0), 0) : 0))
+                .catch(() => 0)
+        )).then((parts) => parts.reduce((a, b) => a + b, 0))
+    )).then((counts) => {
+        const total = counts.reduce((a, b) => a + b, 0);
+        if (total > 0) {
+            paint(total);
+            try { sessionStorage.setItem(KEY, JSON.stringify({ n: total, t: Date.now() })); } catch (e) {}
+        }
+    });
+}
+
+// Transitions.dev card: visits to "/" over the last 30 days from the site's
+// GoatCounter, via its public visitor-counter endpoint (needs "Allow using
+// the visitor counter" enabled in the GoatCounter site settings). The static
+// number in the markup stays if the request fails. Cached 1h.
+function initTransitionsVisitCount() {
+    const el = document.getElementById('transitionsVisits');
+    if (!el) return;
+
+    const KEY = 'transitions-visits-month';
+    const TTL = 60 * 60 * 1000;
+    const iso = (d) => d.toISOString().slice(0, 10);
+    const paint = (n) => { el.textContent = n.toLocaleString('en-US'); };
+
+    try {
+        const c = JSON.parse(sessionStorage.getItem(KEY) || 'null');
+        if (c && Date.now() - c.t < TTL) { paint(c.n); return; }
+    } catch (e) {}
+
+    const end = new Date();
+    const start = new Date(end);
+    start.setUTCDate(start.getUTCDate() - 30);
+
+    fetch('https://jakub.goatcounter.com/counter//.json?start=' + iso(start) + '&end=' + iso(end))
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => {
+            // GoatCounter formats the count for display ("79 621"); keep the digits only.
+            const n = d && d.count ? parseInt(String(d.count).replace(/\D/g, ''), 10) : 0;
+            if (n > 0) {
+                paint(n);
+                try { sessionStorage.setItem(KEY, JSON.stringify({ n, t: Date.now() })); } catch (e) {}
+            }
+        })
+        .catch(() => {});
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     new ThemeManager();
     window.customizationPanelInstance = new CustomizationPanel();
     window.videoHandlerInstance = new VideoHandler();
     window.workTabsInstance = new WorkTabs();
     initProjectThumbnailLqip();
+    initLibrariesInstallCount();
+    initTransitionsVisitCount();
 
     // Easter egg: particles on logo click
     const logo = document.querySelector('.name');
