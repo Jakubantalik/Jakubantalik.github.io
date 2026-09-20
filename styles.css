@@ -37,6 +37,14 @@
 
 /* Custom fonts */
 @font-face {
+    font-family: 'Inter Variable';
+    src: url('fonts/InterVariable.woff2') format('woff2');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
     font-family: 'Suisse Intl';
     src: url('fonts/SuisseIntl-Regular.ttf') format('truetype');
     font-weight: 400;
@@ -52,7 +60,7 @@
 }
 
 body, body * {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+    font-family: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
 }
 
 body {
@@ -247,42 +255,44 @@ body {
 }
 
 .about-bio {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 15px;
-    line-height: 21px;
-    color: var(--text-color);
+    line-height: 25px;
+    color: #3f3f3f;
     margin-bottom: 0;
     white-space: pre-wrap;
     text-wrap: pretty;
 }
 
 .about-bio + .about-bio {
-    margin-top: 21px;
+    margin-top: 25px;
 }
 
 [data-theme="dark"] .about-bio {
     color: var(--text-color);
 }
 
-.inline-link {
-    color: var(--text-color);
-    text-decoration: none;
+/* Native text underline sitting at the font's own position, skipping descenders (g, y, j),
+   30% -> 100% on hover, no animation. Shared by the bio and footer links. */
+.inline-link,
+.footer-links a {
+    color: inherit;
     display: inline-block;
-    border-bottom: 1px solid color-mix(in srgb, currentColor 20%, transparent);
-    padding-bottom: 1px;
-    transition: border-color 0.4s ease, transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    text-decoration: underline;
+    text-decoration-thickness: from-font;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: auto;
+    text-decoration-color: color-mix(in srgb, currentColor 30%, transparent);
+    transition: none;
 }
 
-.inline-link:hover {
-    border-color: color-mix(in srgb, currentColor 80%, transparent);
-    transform: translateY(-3px);
+.inline-link:hover,
+.footer-links a:hover {
+    text-decoration-color: currentColor;
 }
 
-[data-theme="dark"] .inline-link {
-    color: var(--text-color);
-}
 
 .about-text p {
     margin-bottom: 0;
@@ -376,6 +386,46 @@ body {
     max-width: 600px;
 }
 
+/* Vertical project cards (Figma 1609:660): icon + stat on top, copy pinned to the bottom */
+.projects-list:has(.project-card--vertical) {
+    flex-direction: row;
+    align-items: stretch;
+}
+
+/* Doubled class beats the base .project-card rule below without touching it. */
+.project-card.project-card--vertical {
+    flex: 1 1 0;
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    min-height: 203px;
+    padding: 24px;
+    border-radius: 18px;
+}
+
+.project-stat {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    font-size: 12px;
+    line-height: 14px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    opacity: 0.79;
+    white-space: nowrap;
+}
+
+[data-theme="dark"] .project-stat {
+    color: #b1b1b1;
+}
+
+.project-card--vertical .project-title {
+    font-size: 14px;
+}
+
+
 .project-card {
     position: relative;
     display: flex;
@@ -404,12 +454,13 @@ body {
         inset 0 0 0 1px rgba(196, 196, 196, 0.07);
 }
 
+/* Hover: 2% black overlay in light, 2% white in dark */
 .project-card:hover {
-    background-color: color-mix(in srgb, #ffffff 99%, #000 1%);
+    background-color: color-mix(in srgb, #ffffff 98%, #000 2%);
 }
 
 [data-theme="dark"] .project-card:hover {
-    background-color: color-mix(in srgb, #181818 99.5%, #fff 0.5%);
+    background-color: color-mix(in srgb, #181818 98%, #fff 2%);
 }
 
 .project-icon {
@@ -491,17 +542,73 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #ffffff;
+    background-color: rgba(249, 249, 249, 0.9);
 }
 
 [data-theme="dark"] .project-icon--glyph {
-    background-color: #262626;
+    background-color: #282828;
 }
 
+/* Let each glyph render at its own intrinsic size (the width/height attributes). */
 .project-icon--glyph .project-icon-img {
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    transform-origin: center;
+    transition: opacity 0.4s ease, transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Transitions.dev: mark spins on hover, same as the transitions.dev top bar.
+   The cube lives inside a mask over a fixed gradient rect, so the gradient
+   angle does not turn with it. */
+.project-icon-glyph.project-icon-glyph--cube {
+    width: 33px;
+    height: 33px;
+}
+
+.glyph-spin {
+    transform-box: view-box;
+    transform-origin: center;
+    transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.project-card--spin:hover .glyph-spin {
+    transform: rotate(60deg);
+}
+
+/* Libraries.dev: inline scribble redraws on hover, same as the libraries.dev top bar */
+.project-icon-glyph {
+    position: relative;
+    z-index: 1;
+    display: block;
     width: 28px;
     height: 18px;
-    object-fit: contain;
+}
+
+.project-icon-glyph .glyph-stop-a { stop-color: #535353; }
+.project-icon-glyph .glyph-stop-b { stop-color: #8b8b8b; }
+[data-theme="dark"] .project-icon-glyph .glyph-stop-a { stop-color: #c0c0c0; }
+[data-theme="dark"] .project-icon-glyph .glyph-stop-b { stop-color: #e0e0e0; }
+
+/* One continuous dash slide (period 200 on a 100-length path) erases the
+   stroke start-first and redraws it in a single pass. */
+.glyph-draw {
+    stroke-dasharray: 100 100;
+    stroke-dashoffset: 0;
+}
+
+.project-card:hover .glyph-draw {
+    animation: glyph-redraw 1.15s ease-in-out;
+}
+
+@keyframes glyph-redraw {
+    from { stroke-dashoffset: 0; }
+    to   { stroke-dashoffset: -200; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .project-card--spin:hover .glyph-spin { transform: none; }
+    .project-card:hover .glyph-draw { animation: none; }
 }
 
 .project-info {
@@ -632,7 +739,7 @@ body {
 
 /* Experience section */
 .experience-title {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 13px;
@@ -662,7 +769,7 @@ body {
 }
 
 .year {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 13px;
@@ -678,7 +785,7 @@ body {
 }
 
 .role {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 13px;
@@ -693,7 +800,7 @@ body {
 
 /* Work section */
 .work-title {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 15px;
@@ -861,19 +968,6 @@ body {
     gap: 20px;
 }
 
-.footer-links a {
-    color: inherit;
-    text-decoration: none;
-    display: inline-block;
-    border-bottom: 1px solid color-mix(in srgb, currentColor 20%, transparent);
-    padding-bottom: 1px;
-    transition: border-color 0.4s ease, transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.footer-links a:hover {
-    border-color: color-mix(in srgb, currentColor 80%, transparent);
-    transform: translateY(-3px);
-}
 
 /* Responsive design */
 @media (max-width: 768px) {
@@ -931,6 +1025,17 @@ body {
         align-items: flex-start;
     }
 
+    .projects-list:has(.project-card--vertical) {
+        flex-direction: column;
+    }
+
+    /* Column list: flex-basis 0 would let the cards collapse, so size to content. */
+    .project-card.project-card--vertical {
+        flex: none;
+        min-height: 0;
+        align-items: flex-start;
+    }
+
 }
 
 @media (max-width: 480px) {
@@ -976,7 +1081,7 @@ body {
         0 2px 6px 0 rgba(0, 0, 0, 0.05),
         0 4px 42px 0 rgba(0, 0, 0, 0.06);
     border: none;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     user-select: none;
     transition: transform 0.2s, box-shadow 0.2s;
 }
@@ -1511,7 +1616,7 @@ body {
     outline: none;
     font-size: 11px;
     font-weight: 500;
-    font-family: 'Inter', -apple-system, monospace;
+    font-family: 'Inter Variable', 'Inter', -apple-system, monospace;
     color: var(--toolbar-text, #171c1c);
     padding: 0;
     text-transform: uppercase;
@@ -1988,7 +2093,7 @@ body {
         font-size: 13px;
         font-weight: 500;
         color: var(--text-color);
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-family: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         transition: background 0.2s ease, color 0.3s ease;
         -webkit-tap-highlight-color: transparent;
     }
@@ -2446,9 +2551,9 @@ body {
 
 /* Text customization classes */
 /* Font families — applied on body so they cascade to all elements including toolbar */
-body.custom-font-system, body.custom-font-system * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important; }
+body.custom-font-system, body.custom-font-system * { font-family: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important; }
 body.custom-font-serif, body.custom-font-serif * { font-family: Georgia, 'Times New Roman', serif !important; }
-body.custom-font-sans-serif, body.custom-font-sans-serif * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important; }
+body.custom-font-sans-serif, body.custom-font-sans-serif * { font-family: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important; }
 body.custom-font-monospace, body.custom-font-monospace * { font-family: 'Courier New', monospace !important; }
 body.custom-font-Georgia, body.custom-font-Georgia * { font-family: Georgia, serif !important; }
 body.custom-font-Times, body.custom-font-Times * { font-family: 'Times New Roman', serif !important; }
@@ -2457,7 +2562,7 @@ body.custom-font-Helvetica, body.custom-font-Helvetica * { font-family: Helvetic
 body.custom-font-Courier, body.custom-font-Courier * { font-family: 'Courier New', monospace !important; }
 body.custom-font-Comic, body.custom-font-Comic * { font-family: 'Comic Sans MS', cursive !important; }
 body.custom-font-Impact, body.custom-font-Impact * { font-family: Impact, sans-serif !important; }
-body.custom-font-Suisse, body.custom-font-Suisse * { font-family: 'Suisse Intl', 'Inter', -apple-system, sans-serif !important; }
+body.custom-font-Suisse, body.custom-font-Suisse * { font-family: 'Suisse Intl', 'Inter Variable', 'Inter', -apple-system, sans-serif !important; }
 
 /* Text colors */
 .custom-text-black { color: #000000 !important; }

@@ -23,7 +23,7 @@
     <meta name="twitter:image" content="https://jakubantalik.com/og-image.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -175,58 +175,52 @@
                 <div class="work-tabs-stage" id="workTabsStage" data-active="projects">
                     <div class="work-tab-panel projects-panel is-active" id="panelProjects" role="tabpanel" aria-labelledby="tabProjects" data-panel="projects">
                         <div class="projects-list">
-                            <a class="project-card" href="https://libraries.dev" target="_blank" rel="noopener noreferrer">
+                            <a class="project-card project-card--vertical project-card--spin" href="https://transitions.dev" target="_blank" rel="noopener noreferrer">
                                 <span class="project-icon project-icon--glyph">
-                                    <img class="project-icon-img project-icon-img--light" src="imgs/libraries-light.svg" alt="Libraries.dev" width="28" height="18">
-                                    <img class="project-icon-img project-icon-img--dark" src="imgs/libraries-dark.svg" alt="" width="28" height="18">
+                                    <!-- Inline: the cube is a mask over a fixed gradient, so only the shape spins on hover and the gradient angle stays put -->
+                                    <svg class="project-icon-glyph project-icon-glyph--cube" viewBox="0 0 32.8374 32.8374" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Transitions.dev">
+                                        <defs>
+                                            <linearGradient id="transitionsGlyphGradient" x1="16.4187" y1="2.9961" x2="16.4187" y2="29.8413" gradientUnits="userSpaceOnUse">
+                                                <stop class="glyph-stop-a" offset="0"/>
+                                                <stop class="glyph-stop-b" offset="1"/>
+                                            </linearGradient>
+                                            <mask id="transitionsGlyphMask" maskUnits="userSpaceOnUse" x="0" y="0" width="32.8374" height="32.8374">
+                                                <g class="glyph-spin">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M16.9218 5.18022C16.6094 5.00451 16.228 5.00451 15.9156 5.18022L13.4745 6.55336C12.9805 6.8312 12.3548 6.65602 12.077 6.16206C11.7991 5.66811 11.9743 5.04244 12.4683 4.76459L14.9094 3.39145C15.8466 2.86431 16.9908 2.86431 17.928 3.39145L20.3691 4.76459C20.863 5.04244 21.0382 5.66811 20.7604 6.16206C20.4825 6.65602 19.8569 6.8312 19.3629 6.55335L16.9218 5.18022ZM9.69171 7.50378C9.96956 7.99774 9.79437 8.62341 9.30042 8.90126L6.68009 10.3752C6.35697 10.5569 6.15701 10.8989 6.15701 11.2696L6.15701 14.0243C6.15701 14.591 5.69758 15.0505 5.13084 15.0505C4.5641 15.0505 4.10467 14.591 4.10467 14.0243L4.10467 11.2696C4.10467 10.1574 4.70456 9.13169 5.67391 8.58643L8.29424 7.11249C8.78819 6.83464 9.41386 7.00983 9.69171 7.50378ZM23.1457 7.50379C23.4235 7.00983 24.0492 6.83464 24.5431 7.11249L27.1635 8.58643C28.1328 9.13169 28.7327 10.1574 28.7327 11.2696V14.0243C28.7327 14.591 28.2733 15.0505 27.7065 15.0505C27.1398 15.0505 26.6804 14.591 26.6804 14.0243V11.2696C26.6804 10.8989 26.4804 10.5569 26.1573 10.3752L23.537 8.90126C23.043 8.62341 22.8678 7.99774 23.1457 7.50379ZM27.7065 17.7869C28.2733 17.7869 28.7327 18.2463 28.7327 18.8131V21.5678C28.7327 22.68 28.1328 23.7057 27.1635 24.2509L24.5432 25.7249C24.0492 26.0027 23.4235 25.8275 23.1457 25.3336C22.8678 24.8396 23.043 24.214 23.537 23.9361L26.1573 22.4622C26.4804 22.2804 26.6804 21.9385 26.6804 21.5678V18.8131C26.6804 18.2463 27.1398 17.7869 27.7065 17.7869ZM5.13084 17.7869C5.69758 17.7869 6.15701 18.2463 6.15701 18.8131L6.15701 21.5678C6.15701 21.9385 6.35697 22.2804 6.68009 22.4622L9.30041 23.9361C9.79436 24.214 9.96955 24.8396 9.6917 25.3336C9.41385 25.8275 8.78818 26.0027 8.29423 25.7249L5.67391 24.2509C4.70456 23.7057 4.10467 22.68 4.10467 21.5678L4.10467 18.8131C4.10467 18.2463 4.5641 17.7869 5.13084 17.7869ZM12.077 26.6753C12.3548 26.1814 12.9805 26.0062 13.4745 26.284L15.9156 27.6572C16.228 27.8329 16.6094 27.8329 16.9218 27.6572L19.3629 26.284C19.8569 26.0062 20.4825 26.1814 20.7604 26.6753C21.0382 27.1693 20.8631 27.7949 20.3691 28.0728L17.928 29.4459C16.9908 29.9731 15.8466 29.9731 14.9094 29.4459L12.4683 28.0728C11.9743 27.7949 11.7991 27.1693 12.077 26.6753Z" fill="#fff"/>
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M12.8639 14.3664C13.1472 13.8755 13.7748 13.7074 14.2656 13.9907L16.4186 15.2338L18.5716 13.9908C19.0624 13.7074 19.69 13.8755 19.9734 14.3664C20.2568 14.8572 20.0886 15.4848 19.5978 15.7681L17.4448 17.0111V19.4972C17.4448 20.0639 16.9854 20.5234 16.4186 20.5234C15.8519 20.5234 15.3925 20.0639 15.3925 19.4972V17.0111L13.2395 15.7681C12.7487 15.4848 12.5805 14.8572 12.8639 14.3664Z" fill="#fff"/>
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M16.4186 3.3778C16.9854 3.3778 17.4448 3.83723 17.4448 4.40397V8.5514C17.4448 9.11814 16.9854 9.57757 16.4186 9.57757C15.8519 9.57757 15.3925 9.11814 15.3925 8.5514V4.40397C15.3925 3.83723 15.8519 3.3778 16.4186 3.3778ZM4.7676 9.85958C5.05096 9.36877 5.67856 9.20061 6.16937 9.48398L9.82812 11.5964C10.3189 11.8797 10.4871 12.5073 10.2037 12.9981C9.92036 13.4889 9.29276 13.6571 8.80195 13.3737L5.1432 11.2614C4.65239 10.978 4.48423 10.3504 4.7676 9.85958ZM28.0697 9.85958C28.3531 10.3504 28.1849 10.978 27.6941 11.2614L24.0353 13.3737C23.5445 13.6571 22.9169 13.4889 22.6336 12.9981C22.3502 12.5073 22.5184 11.8797 23.0092 11.5964L26.6679 9.48398C27.1587 9.20061 27.7863 9.36877 28.0697 9.85958ZM10.2593 19.8072C10.5426 20.298 10.3745 20.9256 9.88366 21.209L6.16937 23.3534C5.67856 23.6368 5.05097 23.4686 4.7676 22.9778C4.48423 22.487 4.65239 21.8594 5.1432 21.576L8.85749 19.4316C9.3483 19.1482 9.9759 19.3164 10.2593 19.8072ZM22.578 19.8072C22.8614 19.3164 23.489 19.1482 23.9798 19.4316L27.6941 21.576C28.1849 21.8594 28.3531 22.487 28.0697 22.9778C27.7863 23.4686 27.1587 23.6368 26.6679 23.3534L22.9536 21.209C22.4628 20.9256 22.2947 20.298 22.578 19.8072ZM16.4186 23.1957C16.9854 23.1957 17.4448 23.6551 17.4448 24.2218V28.4334C17.4448 29.0001 16.9854 29.4596 16.4186 29.4596C15.8519 29.4596 15.3925 29.0001 15.3925 28.4334V24.2218C15.3925 23.6551 15.8519 23.1957 16.4186 23.1957Z" fill="#fff"/>
+                                                </g>
+                                            </mask>
+                                        </defs>
+                                        <rect width="32.8374" height="32.8374" fill="url(#transitionsGlyphGradient)" mask="url(#transitionsGlyphMask)"/>
+                                    </svg>
                                 </span>
-                                <div class="project-info">
-                                    <p class="project-title">Libraries.dev</p>
-                                    <p class="project-desc">High-crafted UI libraries for AI agents. UI effects for modern apps, ready to use with your coding agents.</p>
-                                </div>
-                                <svg class="project-arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                                    <path d="M4.5 11.5 L11.5 4.5 M5.5 4.5 H11.5 V10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </a>
-
-                            <a class="project-card" href="https://transitions.dev" target="_blank" rel="noopener noreferrer">
-                                <span class="project-icon">
-                                    <img class="project-icon-img project-icon-img--light" src="imgs/transitions-light-th.jpg" alt="Transitions.dev" width="72" height="72">
-                                    <img class="project-icon-img project-icon-img--dark" src="imgs/transitions-dark-th.jpg" alt="" width="72" height="72">
-                                </span>
+                                <span class="project-stat">79,556 monthly visits</span>
                                 <div class="project-info">
                                     <p class="project-title">Transitions.dev</p>
-                                    <p class="project-desc">Collection of the most essential transitions for web apps that you can just copy and paste into any project.</p>
+                                    <p class="project-desc">Collection of the most essential UI transitions for AI agents.</p>
                                 </div>
-                                <svg class="project-arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                                    <path d="M4.5 11.5 L11.5 4.5 M5.5 4.5 H11.5 V10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
                             </a>
 
-                            <a class="project-card" href="https://beam.jakubantalik.com" target="_blank" rel="noopener noreferrer">
-                                <span class="project-icon">
-                                    <img class="project-icon-img" src="imgs/beam-th.jpg" alt="Border beam component" width="72" height="72">
+                            <a class="project-card project-card--vertical" href="https://libraries.dev" target="_blank" rel="noopener noreferrer">
+                                <span class="project-icon project-icon--glyph">
+                                    <!-- Inline so the scribble can redraw on hover (same as the libraries.dev top bar) -->
+                                    <svg class="project-icon-glyph" viewBox="0 0 28.3381 18.3382" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Libraries.dev">
+                                        <defs>
+                                            <linearGradient id="librariesGlyphGradient" x1="14.169" y1="1.6692" x2="14.169" y2="16.6692" gradientUnits="userSpaceOnUse">
+                                                <stop class="glyph-stop-a" offset="0"/>
+                                                <stop class="glyph-stop-b" offset="1"/>
+                                            </linearGradient>
+                                        </defs>
+                                        <path class="glyph-draw" d="M26.669 12.9192L8.61349 16.6692L22.5024 9.1692L1.66904 11.6692L24.169 1.6692L1.66904 5.4192L11.669 1.6692" stroke="#333333" stroke-width="3.3375" stroke-linecap="round" stroke-linejoin="round" pathLength="100"/>
+                                        <path class="glyph-draw" d="M26.669 12.9192L8.61349 16.6692L22.5024 9.1692L1.66904 11.6692L24.169 1.6692L1.66904 5.4192L11.669 1.6692" stroke="url(#librariesGlyphGradient)" stroke-width="3.3375" stroke-linecap="round" stroke-linejoin="round" pathLength="100"/>
+                                    </svg>
                                 </span>
+                                <span class="project-stat">4,127,822 installs</span>
                                 <div class="project-info">
-                                    <p class="project-title">Border beam component</p>
-                                    <p class="project-desc">Animated Border Beam is a customizable React component that creates a smooth, animated beam effect traveling around the border.</p>
+                                    <p class="project-title">Libraries.dev</p>
+                                    <p class="project-desc">High-crafted UI effects libraries for AI agents.</p>
                                 </div>
-                                <svg class="project-arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                                    <path d="M4.5 11.5 L11.5 4.5 M5.5 4.5 H11.5 V10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </a>
-
-                            <a class="project-card" href="https://metal.jakubantalik.com" target="_blank" rel="noopener noreferrer">
-                                <span class="project-icon">
-                                    <img class="project-icon-img" src="imgs/metal-th.jpg" alt="Liquid metal component" width="72" height="72">
-                                </span>
-                                <div class="project-info">
-                                    <p class="project-title">Liquid metal component</p>
-                                    <p class="project-desc">Animated liquid metal border component for React, with dynamic fluid-like reflections, smooth motion effects.</p>
-                                </div>
-                                <svg class="project-arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                                    <path d="M4.5 11.5 L11.5 4.5 M5.5 4.5 H11.5 V10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
                             </a>
                         </div>
                     </div>

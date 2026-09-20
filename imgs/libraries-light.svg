@@ -1,10 +1,10 @@
 <svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="28.3381" height="18.3382" viewBox="0 0 28.3381 18.3382" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g id="vector">
 <path d="M26.669 12.9192L8.61349 16.6692L22.5024 9.1692L1.66904 11.6692L24.169 1.6692L1.66904 5.4192L11.669 1.6692" stroke="#333333" stroke-width="3.3375" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M26.669 12.9192L8.61349 16.6692L22.5024 9.1692L1.66904 11.6692L24.169 1.6692L1.66904 5.4192L11.669 1.6692" stroke="url(#paint0_linear_0_4)" stroke-width="3.3375" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M26.669 12.9192L8.61349 16.6692L22.5024 9.1692L1.66904 11.6692L24.169 1.6692L1.66904 5.4192L11.669 1.6692" stroke="url(#paint0_linear_0_8)" stroke-width="3.3375" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
 <defs>
-<linearGradient id="paint0_linear_0_4" x1="14.169" y1="1.6692" x2="14.169" y2="16.6692" gradientUnits="userSpaceOnUse">
+<linearGradient id="paint0_linear_0_8" x1="14.169" y1="1.6692" x2="14.169" y2="16.6692" gradientUnits="userSpaceOnUse">
 <stop stop-color="#535353"/>
 <stop offset="1" stop-color="#8B8B8B"/>
 </linearGradient>
