@@ -278,7 +278,7 @@ body {
    30% -> 100% on hover, no animation. Shared by the bio and footer links. */
 .inline-link,
 .footer-links a {
-    color: inherit;
+    color: #151515;
     display: inline-block;
     text-decoration: underline;
     text-decoration-thickness: from-font;
@@ -291,6 +291,11 @@ body {
 .inline-link:hover,
 .footer-links a:hover {
     text-decoration-color: currentColor;
+}
+
+[data-theme="dark"] .inline-link,
+[data-theme="dark"] .footer-links a {
+    color: #ffffff;
 }
 
 
