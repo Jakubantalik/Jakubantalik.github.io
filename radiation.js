@@ -598,8 +598,12 @@ void main() {
   float snow = max(nr, max(ng, nb));
   float roll = exp(-pow((fract(p.y / 240.0 - t * uRollSpeed) - 0.5) * 7.0, 2.0)) * fall;
   float track = step(0.993, hash(vec2(floor(p.y), floor(t * 8.0)))) * fall;
-  float jit = (hash(vec2(floor(along / 6.0), frame)) - 0.5) * 3.0;
-  float rail = (1.0 - smoothstep(0.0, 1.2, abs(dEdge - 2.0 - jit))) * exp(-pow(along / reach, 2.0));
+  // the line hugs the screen's own border near the phone, so at a corner it
+  // bends round both edges
+  vec2 screenSize = uRes / uDpr;
+  float border = min(min(p.x, p.y), min(screenSize.x - p.x, screenSize.y - p.y));
+  float jit = (hash(vec2(floor((p.x + p.y) / 6.0), frame)) - 0.5) * 3.0;
+  float rail = (1.0 - smoothstep(0.0, 1.2, abs(border - 2.0 - jit))) * exp(-pow(length(q0) / reach, 2.0));
   bool dark = uDark > 0.5;
   vec3 base = dark ? mix(uTint, vec3(1.0), 0.7) : uTint;
   vec3 col = base;
