@@ -338,31 +338,46 @@
   ];
   let sides = store.get('phoneSides', null); // { left: [x,y,z], topLeft: [...], ... }
 
-  /** Where a learned place sits on the edge, as s. The Pixel's magnetometer
-   *  sits near the top, so a phone beside the left or right edge is read best
-   *  up there: about 22% down the screen. */
+  const PLACE_NAMES = { left: 'left', topLeft: 'top-left', top: 'top', topRight: 'top-right', right: 'right' };
+
+  /** Where a learned place sits on the edge, as s. Beside the left or right
+   *  edge it is a third of the way down the page: well clear of the corners
+   *  (Chrome's bar takes the top of the screen, so the sensor's own height
+   *  would sit almost in the corner). */
   function placeS(key) {
-    if (key === 'left' || key === 'right') {
-      const offsetY = bridge.touchOffset ? bridge.touchOffset[1] : Math.max(0, screen.height - innerHeight);
-      return toS(key, clamp((0.22 * screen.height - offsetY) / innerHeight, 0.06, 0.9));
-    }
+    if (key === 'left' || key === 'right') return toS(key, 0.32);
     return toS(key);
   }
+
+  let phoneLive = null; // the last match, for the Phone card
 
   /** Which learned place the field is closest to, and how close the phone is.
    *  Between two neighbouring places (left and the top-left corner, say) the
    *  point lands in between, by how well each matches. */
   function locate(delta) {
     const n = len(delta);
+    phoneLive = { n, ms: [] };
     if (!sides || n < 4) return { level: 0, ut: n };
     const learned = PLACES.map((p) => p[0]).filter((k) => sides[k]);
-    const ms = learned.map((k, i) => ({ k, i, m: dot(delta, sides[k]) / (n * len(sides[k])) })).sort((a, b) => b.m - a.m);
+    const ms = learned
+      .map((k, i) => {
+        const size = len(sides[k]);
+        const m = dot(delta, sides[k]) / (n * size);
+        // The iPhone never gives more field at a place than it did touching
+        // it, when it was learned: a field much stronger than that is from
+        // somewhere nearer the sensor, however well the direction matches.
+        const cap = size * 1.3 + 6;
+        const fit = n <= cap ? 1 : clamp(1 - (n - cap) / (0.5 * size + 6), 0, 1);
+        return { k, i, m, fit, score: m * fit - (1 - fit) };
+      })
+      .sort((a, b) => b.score - a.score);
+    phoneLive.ms = ms;
     const best = ms[0];
-    if (best.m < 0.6) return { level: 0, ut: n };
+    if (best.m < 0.6 || best.fit <= 0) return { level: 0, ut: n };
     let s = placeS(best.k);
     let size = len(sides[best.k]);
     const next = ms[1];
-    if (next && Math.abs(next.i - best.i) === 1) {
+    if (next && next.fit > 0 && Math.abs(next.i - best.i) === 1) {
       // How far round from the best place to its neighbour the field has
       // turned; only when it lies between the two.
       const a = sides[best.k];
@@ -379,6 +394,15 @@
     const ratio = n / size; // 1 when touching, as learned
     const level = clamp(Math.cbrt(ratio) * 1.15 - 0.12, 0, 1) * smooth(4, 14, n) * smooth(0.6, 0.8, best.m);
     return { s, level, ut: n };
+  }
+
+  /** What the phone reads now, in words: the field and the best matches. */
+  function liveText() {
+    const p = phoneLive;
+    if (!p) return '';
+    if (p.n < 4 || !p.ms.length) return `Now ${Math.round(p.n)} µT: nothing near.`;
+    const top = p.ms.slice(0, 2).map((x) => `${PLACE_NAMES[x.k]} ${Math.round(x.m * 100)}%${x.fit < 1 ? ' (too strong for it)' : ''}`);
+    return `Now ${Math.round(p.n)} µT · ${top.join(' · then ')}`;
   }
 
   const bridge = {
@@ -457,6 +481,10 @@
           this.phone = { level: 0, ut: f.strength };
         } else if (sides) {
           this.phone = locate(f.delta);
+          if (now - (this.liveAt || 0) > 0.2) {
+            this.liveAt = now;
+            lab.live(liveText());
+          }
         } else if (f.pos && f.strength > 4) {
           this.phone = fromMagnet(f);
         } else {
@@ -1337,6 +1365,8 @@ void main() {
 .rad-card[hidden]{display:none}
 .rad-card h4{margin:0 0 4px;font-size:13px;font-weight:600}
 .rad-card p{margin:0;color:var(--text-secondary,#666)}
+.rad-card p+p{margin-top:8px}
+.rad-card .rad-live{color:var(--rad-fg);font-variant-numeric:tabular-nums}
 .rad-card .rad-bar{height:3px;border-radius:2px;margin:12px 0 2px;background:color-mix(in srgb,var(--rad-fg) 10%,transparent);overflow:hidden}
 .rad-card .rad-bar i{display:block;height:100%;width:0;background:#2f6bff;transition:width .1s linear}
 .rad-card .rad-row{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
@@ -1359,7 +1389,7 @@ void main() {
   /* -------------------------------------------------------------- the lab */
 
   const lab = (() => {
-    if (!LAB) return { render() {} };
+    if (!LAB) return { render() {}, live() {} };
     const el = document.createElement('div');
     el.className = 'rad-lab';
     const panel = document.createElement('div');
@@ -1535,11 +1565,16 @@ void main() {
           placeEdge(key);
         }
       } else if (bridge.state === 'open') {
-        const NAMES = { left: 'left', topLeft: 'top-left', top: 'top', topRight: 'top-right', right: 'right' };
-        const learned = sides ? PLACES.filter((p) => sides[p[0]]).map((p) => NAMES[p[0]]).join(', ') : '';
+        const have = sides ? PLACES.filter((p) => sides[p[0]]).map((p) => p[0]) : [];
+        const learned = have.map((k) => `${PLACE_NAMES[k]} ${Math.round(len(sides[k]))} µT`).join(' · ');
+        const weak = have.filter((k) => len(sides[k]) < 25).map((k) => PLACE_NAMES[k]);
         card.innerHTML = `<h4>Magnet Bridge${bridge.device ? ' · ' + bridge.device : ''}</h4><p>${
-          learned ? `iPhone learned at: ${learned}.` : 'No iPhone learned yet: a magnet works now, an iPhone needs learning once.'
-        } Keep the iPhone turned the same way as when learned.</p><div class="rad-row"><button class="rad-primary" data-a="learn">${
+          learned ? `Learned: ${learned}. Keep the iPhone turned the same way as when learned.` : 'No iPhone learned yet: a magnet works now, an iPhone needs learning once.'
+        }</p>${
+          weak.length
+            ? `<p>${weak.join(' and ')} read${weak.length > 1 ? '' : 's'} under 25 µT, close to nothing, so ${weak.length > 1 ? 'they are' : 'it is'} easy to mistake for another place. Learn again with the iPhone touching there, or skip it.</p>`
+            : ''
+        }${learned ? `<p class="rad-live">${liveText()}</p>` : ''}<div class="rad-row"><button class="rad-primary" data-a="learn">${
           learned ? 'Learn again' : 'Learn the iPhone'
         }</button><button data-a="close">Close</button></div>`;
       } else if (bridge.state === 'connecting') {
@@ -1589,6 +1624,10 @@ void main() {
     return {
       render,
       renderAll: render,
+      live(text) {
+        const el = card.querySelector('.rad-live');
+        if (el && !card.hidden) el.textContent = text;
+      },
       mount() {
         document.body.append(el, panel, card, edge);
         render();
@@ -1641,6 +1680,10 @@ void main() {
         wake();
       },
       state: () => ({ want: { ...want }, cur: { ...cur }, fx, bridge: bridge.state, sides, preview, P: geometry().P, N: geometry().N }),
+      // For checks: where a field would put the iPhone, with the learned places.
+      match(delta) {
+        return { ...locate(delta), live: liveText() };
+      },
       // For checks: hold the source somewhere without a mouse.
       hold(side, along, level) {
         sim = { s: toS(side, along), level, ut: 30 + level * 250 };
