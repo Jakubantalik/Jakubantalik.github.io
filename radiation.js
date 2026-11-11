@@ -96,7 +96,7 @@
     '4E': {
       name: 'Soft',
       over: {
-        strength: 0.8, reach: 0.85, width: 0.9, opacity: 0.5, density: 0.48, grain: 1, fps: 25,
+        strength: 1, reach: 1, width: 0.45, opacity: 1.1, density: 0.48, grain: 1, fps: 25,
         tearChance: 0.12, band: 31, roll: 0.32,
         rate: 400, pspeed: 0.45, psize: 0.5, stick: 0.4, textReach: 0.65,
       },
