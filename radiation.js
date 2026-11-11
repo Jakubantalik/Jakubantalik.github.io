@@ -124,28 +124,44 @@
 
   /* ---------------------------------------------------------------- source */
 
-  // Where the radiation comes from: an edge, a point along it (0..1), and how
-  // strong (0..1). `want` is what the input says; `cur` follows it smoothly.
+  // Where the radiation comes from: a point on the screen's edge, and how
+  // strong (0..1). The point is s, running clockwise round the edge: 0 the
+  // bottom-left corner, 1 top-left, 2 top-right, 3 bottom-right, so between
+  // 0 and 1 it is on the left edge, 1 to 2 the top, and so on. `want` is what
+  // the input says; `cur` follows it, gliding round the edge.
   const OUT = 22; // the phone lies just outside the screen
-  const want = { side: 'left', along: 0.3, level: 0, ut: 0 };
-  const cur = { side: 'left', along: 0.3, level: 0, ut: 0 };
+  const want = { s: 0.7, level: 0, ut: 0 };
+  const cur = { s: 0.7, level: 0, ut: 0 };
   let fx = 0; // what the effect shows: the phone's level times the strength
 
-  function follow(dt) {
-    if (want.side !== cur.side) {
-      // Fade out on the old side before moving to the new one.
-      if (cur.level < 0.02) {
-        cur.side = want.side;
-        cur.along = want.along;
-      } else {
-        cur.level += (0 - cur.level) * (1 - Math.exp(-dt / 0.07));
-        return;
-      }
+  const wrap4 = (s) => ((s % 4) + 4) % 4;
+  /** A side (left/top/right/bottom, with how far along it, 0..1 down or
+   *  across) or a corner (topLeft, ...) as s. */
+  function toS(side, along = 0.5) {
+    switch (side) {
+      case 'left': return 1 - along;
+      case 'top': return 1 + along;
+      case 'right': return 2 + along;
+      case 'bottom': return 4 - along;
+      case 'topLeft': return 1;
+      case 'topRight': return 2;
+      case 'bottomRight': return 3;
+      default: return 0; // bottomLeft
     }
+  }
+
+  function follow(dt) {
+    const d = wrap4(want.s - cur.s + 2) - 2; // the short way round
+    if (Math.abs(d) > 1.2 && cur.level >= 0.02) {
+      // Too far to glide (left to right): fade out, then jump.
+      cur.level += (0 - cur.level) * (1 - Math.exp(-dt / 0.07));
+      return;
+    }
+    if (Math.abs(d) > 1.2 || cur.level < 0.02) cur.s = want.s;
+    else cur.s = wrap4(cur.s + d * (1 - Math.exp(-dt / 0.18)));
     const tau = want.level > cur.level ? P.fadeIn : P.fadeOut;
     cur.level += (want.level - cur.level) * (1 - Math.exp(-dt / tau));
     if (want.level === 0 && cur.level < 0.002) cur.level = 0;
-    cur.along += (want.along - cur.along) * (1 - Math.exp(-dt / 0.15));
     cur.ut += (want.ut - cur.ut) * (1 - Math.exp(-dt / 0.2));
   }
 
@@ -155,25 +171,41 @@
     return Math.hypot(dx * g.A[0] + dy * g.A[1], (dx * g.N[0] + dy * g.N[1]) / P.width);
   }
 
+  // Outward normals of the four edges, in the order s runs through them.
+  const EDGE_N = [[-1, 0], [0, -1], [1, 0], [0, 1]];
+  const CORNER_ZONE = 90; // px either side of a corner where it turns diagonal
+
   function geometry() {
     const w = innerWidth;
     const h = innerHeight;
     const reach = clamp(0.55 * Math.min(w, h), 170, 420) * P.reach;
-    let Ps, N, A;
-    switch (cur.side) {
-      case 'left':
-        Ps = [-OUT, cur.along * h]; N = [1, 0]; A = [0, 1];
-        break;
-      case 'right':
-        Ps = [w + OUT, cur.along * h]; N = [-1, 0]; A = [0, 1];
-        break;
-      case 'top':
-        Ps = [cur.along * w, -OUT]; N = [0, 1]; A = [1, 0];
-        break;
-      default:
-        Ps = [cur.along * w, h + OUT]; N = [0, -1]; A = [1, 0];
+    const s = wrap4(cur.s);
+    const e = Math.floor(s) % 4;
+    const f = s - Math.floor(s);
+    const len = e % 2 ? w : h;
+    const Q = [[0, h * (1 - f)], [w * f, 0], [w, h * f], [w * (1 - f), h]][e];
+    // Near a corner the phone faces the page diagonally.
+    let n = EDGE_N[e];
+    const toStart = f * len;
+    const toEnd = (1 - f) * len;
+    const corner = toStart < toEnd ? e : (e + 1) % 4;
+    const t = smooth(0, CORNER_ZONE, Math.min(toStart, toEnd));
+    if (t < 1) {
+      const a = EDGE_N[(corner + 3) % 4];
+      const b = EDGE_N[corner];
+      const diag = [(a[0] + b[0]) / Math.SQRT2, (a[1] + b[1]) / Math.SQRT2];
+      n = [diag[0] + (n[0] - diag[0]) * t, diag[1] + (n[1] - diag[1]) * t];
+      const l = Math.hypot(n[0], n[1]);
+      n = [n[0] / l, n[1] / l];
     }
-    return { w, h, reach, textReach: reach * (w > 700 ? 1.7 : 1.15) * P.textReach, P: Ps, N, A };
+    const N = [-n[0], -n[1]];
+    return {
+      w, h, reach,
+      textReach: reach * (w > 700 ? 1.7 : 1.15) * P.textReach,
+      P: [Q[0] + n[0] * OUT, Q[1] + n[1] * OUT],
+      N,
+      A: [-N[1], N[0]],
+    };
   }
 
   /* ------------------------------------------------------------- the mouse */
@@ -192,11 +224,9 @@
       const x = e.clientX;
       const y = e.clientY;
       const reach = clamp(0.3 * Math.min(w, h), 140, 280);
-      const d = { left: x, right: w - x, top: y, bottom: h - y };
-      let side = 'left';
-      for (const k in d) if (d[k] < d[side]) side = k;
-      const level = overLab ? 0 : Math.pow(clamp(1 - d[side] / reach, 0, 1), 1.2);
-      sim = { side, along: side === 'left' || side === 'right' ? y / h : x / w, level, ut: 30 + level * 250 };
+      const near = nearestEdge(x, y);
+      const level = overLab ? 0 : Math.pow(clamp(1 - near.d / reach, 0, 1), 1.2);
+      sim = { s: near.s, level, ut: 30 + level * 250 };
       wake();
     },
     { passive: true },
@@ -206,23 +236,33 @@
     wake();
   });
 
+  /** The point on the screen's edge nearest to (x, y), as s, and how far. */
+  function nearestEdge(x, y) {
+    const w = innerWidth;
+    const h = innerHeight;
+    const d = { left: x, right: w - x, top: y, bottom: h - y };
+    let side = 'left';
+    for (const k in d) if (d[k] < d[side]) side = k;
+    const along = side === 'left' || side === 'right' ? clamp(y / h, 0, 1) : clamp(x / w, 0, 1);
+    return { s: toS(side, along), d: Math.max(0, d[side]) };
+  }
+
   /* ----------------------------------------------------------- the preview */
 
-  // demo | left | top | right | off
+  // demo, off, or a place held: left, topLeft, top, topRight, right
+  const HOLDS = { left: toS('left', 0.3), topLeft: 1, top: 1.5, topRight: 2, right: toS('right', 0.3) };
   let preview = LAB ? store.get('preview', 'demo') : 'off';
+  // The demo walks the phone round: left, the corner, top, the corner, right,
+  // then takes it away.
   function demo(t) {
-    const seq = [
-      ['left', 0.3],
-      ['top', 0.5],
-      ['right', 0.55],
-    ];
-    const period = 4.4;
-    const k = Math.floor(t / period) % seq.length;
+    const stops = [HOLDS.left, HOLDS.topLeft, HOLDS.top, HOLDS.topRight, HOLDS.right];
+    const step = 1.7;
+    const period = step * stops.length + 1.6;
     const u = t % period;
-    const [side, along] = seq[k];
-    const level =
-      u < 1.2 ? smooth(0, 1.2, u) : u < 3.1 ? 0.88 + 0.12 * Math.sin((u - 1.2) * 4.5) : u < 3.8 ? 1 - smooth(3.1, 3.8, u) : 0;
-    return { side, along: along + 0.04 * Math.sin(t * 0.9), level, ut: 20 + level * 240 };
+    const k = Math.min(stops.length - 1, Math.floor(u / step));
+    const away = u > step * stops.length;
+    const level = away ? 0 : u < 0.8 ? smooth(0, 0.8, u) : 0.9 + 0.1 * Math.sin(u * 4.5);
+    return { s: stops[k], level, ut: 20 + level * 240 };
   }
 
   /* -------------------------------------------------- Magnet Bridge, phone */
@@ -287,35 +327,58 @@
     }
   }
 
-  const LEARN_SIDES = ['left', 'top', 'right'];
-  let sides = store.get('phoneSides', null); // { left: [x,y,z], top: [...], right: [...] }
+  // The places the iPhone is learned at, in order round the edge:
+  // [key, how to say it, can be skipped].
+  const PLACES = [
+    ['left', 'beside the left edge', false],
+    ['topLeft', 'at the top-left corner', true],
+    ['top', 'beside the top edge', false],
+    ['topRight', 'at the top-right corner', true],
+    ['right', 'beside the right edge', true],
+  ];
+  let sides = store.get('phoneSides', null); // { left: [x,y,z], topLeft: [...], ... }
 
-  /** Which learned side the field is closest to, and how close the phone is. */
+  /** Where a learned place sits on the edge, as s. The Pixel's magnetometer
+   *  sits near the top, so a phone beside the left or right edge is read best
+   *  up there: about 22% down the screen. */
+  function placeS(key) {
+    if (key === 'left' || key === 'right') {
+      const offsetY = bridge.touchOffset ? bridge.touchOffset[1] : Math.max(0, screen.height - innerHeight);
+      return toS(key, clamp((0.22 * screen.height - offsetY) / innerHeight, 0.06, 0.9));
+    }
+    return toS(key);
+  }
+
+  /** Which learned place the field is closest to, and how close the phone is.
+   *  Between two neighbouring places (left and the top-left corner, say) the
+   *  point lands in between, by how well each matches. */
   function locate(delta) {
     const n = len(delta);
     if (!sides || n < 4) return { level: 0, ut: n };
-    let best = null;
-    let match = -2;
-    for (const side in sides) {
-      const t = sides[side];
-      const m = dot(delta, t) / (n * len(t));
-      if (m > match) {
-        match = m;
-        best = side;
+    const learned = PLACES.map((p) => p[0]).filter((k) => sides[k]);
+    const ms = learned.map((k, i) => ({ k, i, m: dot(delta, sides[k]) / (n * len(sides[k])) })).sort((a, b) => b.m - a.m);
+    const best = ms[0];
+    if (best.m < 0.6) return { level: 0, ut: n };
+    let s = placeS(best.k);
+    let size = len(sides[best.k]);
+    const next = ms[1];
+    if (next && Math.abs(next.i - best.i) === 1) {
+      // How far round from the best place to its neighbour the field has
+      // turned; only when it lies between the two.
+      const a = sides[best.k];
+      const b = sides[next.k];
+      const angle = (u, v) => Math.acos(clamp(dot(u, v) / (len(u) * len(v)), -1, 1));
+      const ta = angle(delta, a);
+      const tb = angle(delta, b);
+      if (ta + tb < angle(a, b) * 1.25 + 0.1) {
+        const k = ta / (ta + tb);
+        s = wrap4(s + (wrap4(placeS(next.k) - s + 2) - 2) * k);
+        size += (len(b) - size) * k;
       }
     }
-    if (match < 0.6) return { level: 0, ut: n };
-    const ratio = n / len(sides[best]); // 1 when touching, as learned
-    const level = clamp(Math.cbrt(ratio) * 1.15 - 0.12, 0, 1) * smooth(4, 14, n) * smooth(0.6, 0.8, match);
-    return { side: best, along: anchorAlong(best), level, ut: n };
-  }
-
-  /** The Pixel's magnetometer sits near the top, so a phone beside the left or
-   *  right edge is read best up there: about 22% down the screen. */
-  function anchorAlong(side) {
-    if (side === 'top') return 0.5;
-    const offsetY = bridge.touchOffset ? bridge.touchOffset[1] : Math.max(0, screen.height - innerHeight);
-    return clamp((0.22 * screen.height - offsetY) / innerHeight, 0.06, 0.9);
+    const ratio = n / size; // 1 when touching, as learned
+    const level = clamp(Math.cbrt(ratio) * 1.15 - 0.12, 0, 1) * smooth(4, 14, n) * smooth(0.6, 0.8, best.m);
+    return { s, level, ut: n };
   }
 
   const bridge = {
@@ -415,25 +478,13 @@
   /** Without a learned phone, a plain magnet: the bridge's own locator. */
   function fromMagnet(f) {
     const o = bridge.touchOffset || [0, Math.max(0, screen.height - innerHeight)];
-    const x = f.pos.x - o[0];
-    const y = f.pos.y - o[1];
-    const w = innerWidth;
-    const h = innerHeight;
-    const d = { left: x, right: w - x, top: y, bottom: h - y };
-    let side = 'left';
-    for (const k in d) if (d[k] < d[side]) side = k;
-    return {
-      side,
-      along: side === 'left' || side === 'right' ? clamp(y / h, 0, 1) : clamp(x / w, 0, 1),
-      level: smooth(4, 40, f.strength),
-      ut: f.strength,
-    };
+    return { s: nearestEdge(f.pos.x - o[0], f.pos.y - o[1]).s, level: smooth(4, 40, f.strength), ut: f.strength };
   }
 
-  /** "Learn the iPhone": a field per side, as in Magnetic Home. */
+  /** "Learn the iPhone": a field per place, as in Magnetic Home. */
   const learn = {
     active: false,
-    step: 0, // 0 = zeroing, then 1 + index into LEARN_SIDES
+    step: 0, // 0 = zeroing, then 1 + index into PLACES
     zeroUntil: 0,
     hold: null,
     got: {},
@@ -446,8 +497,8 @@
       bridge.send({ type: 'calibrate' });
       lab.render();
     },
-    get side() {
-      return this.step > 0 ? LEARN_SIDES[this.step - 1] : null;
+    get place() {
+      return this.step > 0 ? PLACES[this.step - 1] : null;
     },
     tick(f, now) {
       if (this.step === 0) {
@@ -457,7 +508,7 @@
       }
       const g = this.hold.tick(f, now);
       if (g) {
-        this.got[this.side] = g;
+        this.got[this.place[0]] = g;
         if (navigator.vibrate) navigator.vibrate(30);
         this.hold = new SideHold(g);
         this.next();
@@ -466,7 +517,7 @@
     },
     next() {
       this.step += 1;
-      if (this.step > LEARN_SIDES.length) this.finish();
+      if (this.step > PLACES.length) this.finish();
     },
     skip() {
       this.next();
@@ -1205,15 +1256,14 @@ void main() {
     const now = clock();
     // Holding a side in the lab wins over everything: it stays on while the
     // sliders are dragged.
-    if (preview === 'left' || preview === 'right') return { side: preview, along: 0.3, level: 1, ut: 280 };
-    if (preview === 'top') return { side: 'top', along: 0.5, level: 1, ut: 280 };
+    if (preview in HOLDS) return { s: HOLDS[preview], level: 1, ut: 280 };
     if (bridge.state === 'open' && now - bridge.frameAt < 0.6 && bridge.phone) {
-      return { ...want, ...bridge.phone, side: bridge.phone.side || want.side, along: bridge.phone.along ?? want.along };
+      return { ...want, ...bridge.phone, s: bridge.phone.s ?? want.s };
     }
     const mouse = sim && now - simAt < 2.5;
     if (preview === 'demo') return mouse && sim.level > 0.02 ? sim : demo(time);
     if (mouse) return sim;
-    return { side: want.side, along: want.along, level: 0, ut: 0 };
+    return { s: want.s, level: 0, ut: 0 };
   }
 
   function frame() {
@@ -1265,7 +1315,7 @@ void main() {
 .rad-panel-head button{background:color-mix(in srgb,var(--rad-fg) 7%,transparent);padding:6px 10px;border-radius:999px;font-weight:500}
 .rad-panel-head button:hover{background:color-mix(in srgb,var(--rad-fg) 12%,transparent)}
 .rad-seg{display:flex;gap:2px;padding:2px;margin-bottom:6px;border-radius:999px;background:color-mix(in srgb,var(--rad-fg) 6%,transparent)}
-.rad-seg button{flex:1;background:transparent;padding:6px 0;border-radius:999px;font-weight:500}
+.rad-seg button{flex:1;background:transparent;padding:6px 0;border-radius:999px;font-weight:500;min-width:0}
 .rad-seg button[aria-pressed="true"]{background:var(--rad-bg);box-shadow:0 1px 3px rgba(0,0,0,.12)}
 .rad-panel details{border-top:1px solid color-mix(in srgb,var(--rad-fg) 9%,transparent);padding:2px 0 6px}
 .rad-panel summary{display:flex;justify-content:space-between;cursor:pointer;list-style:none;padding:8px 0 4px;font-weight:600}
@@ -1291,6 +1341,9 @@ void main() {
 .rad-edge{position:fixed;z-index:2147483001;pointer-events:none;background:#2f6bff;box-shadow:0 0 14px 2px rgba(47,107,255,.7);border-radius:4px;
   animation:rad-pulse 1s ease-in-out infinite alternate}
 .rad-edge[hidden]{display:none}
+.rad-edge-corner{background:none;box-shadow:none;border:0 solid #2f6bff;border-radius:0;filter:drop-shadow(0 0 6px rgba(47,107,255,.8))}
+.rad-edge-corner.rad-tl{border-left-width:5px;border-top-width:5px}
+.rad-edge-corner.rad-tr{border-right-width:5px;border-top-width:5px}
 @keyframes rad-pulse{from{opacity:.45}to{opacity:1}}
 @media (max-width:600px){
   .rad-panel{left:12px;right:12px;top:auto;bottom:calc(66px + env(safe-area-inset-bottom));width:auto;max-height:52vh}
@@ -1383,7 +1436,21 @@ void main() {
 
     const seg = document.createElement('div');
     seg.className = 'rad-seg';
-    const previewButtons = ['demo', 'left', 'top', 'right', 'off'].map((m) => [m, button(seg, m[0].toUpperCase() + m.slice(1), () => setPreview(m))]);
+    const PREVIEWS = [
+      ['demo', 'Demo', 'Demo'],
+      ['left', '←', 'Left edge'],
+      ['topLeft', '↖', 'Top-left corner'],
+      ['top', '↑', 'Top edge'],
+      ['topRight', '↗', 'Top-right corner'],
+      ['right', '→', 'Right edge'],
+      ['off', 'Off', 'Off'],
+    ];
+    const previewButtons = PREVIEWS.map(([m, label, title]) => {
+      const b = button(seg, label, () => setPreview(m));
+      b.title = title;
+      b.setAttribute('aria-label', title);
+      return [m, b];
+    });
     panel.appendChild(seg);
 
     const inputs = {};
@@ -1450,22 +1517,24 @@ void main() {
       edge.hidden = true;
       if (card.hidden) return;
       if (learn.active) {
-        const side = learn.side;
-        if (!side) {
+        const place = learn.place;
+        if (!place) {
           card.innerHTML = '<h4>Learn the iPhone</h4><p>Keep the iPhone away for a moment.</p><div class="rad-bar"><i></i></div><div class="rad-row"><button data-a="cancel">Cancel</button></div>';
         } else {
           const got = learn.hold && learn.hold.held;
-          card.innerHTML = `<h4>Learn the iPhone · ${side}</h4><p>${
-            got ? 'Got it. Take the iPhone away.' : `Lay the iPhone flat beside the ${side} edge, touching, and hold still.`
+          const [key, where, skippable] = place;
+          card.innerHTML = `<h4>Learn the iPhone · ${learn.step} of ${PLACES.length}</h4><p>${
+            got ? 'Got it. Take the iPhone away.' : `Lay the iPhone flat ${where}, touching, and hold still.`
           }</p><div class="rad-bar"><i style="width:${Math.round((learn.hold ? learn.hold.progress : 0) * 100)}%"></i></div><div class="rad-row">${
-            side === 'right' ? '<button data-a="skip">Skip this side</button>' : ''
+            skippable ? '<button data-a="skip">Skip</button>' : ''
           }<button data-a="cancel">Cancel</button></div>`;
-          placeEdge(side);
+          placeEdge(key);
         }
       } else if (bridge.state === 'open') {
-        const learned = sides ? Object.keys(sides).join(', ') : '';
+        const NAMES = { left: 'left', topLeft: 'top-left', top: 'top', topRight: 'top-right', right: 'right' };
+        const learned = sides ? PLACES.filter((p) => sides[p[0]]).map((p) => NAMES[p[0]]).join(', ') : '';
         card.innerHTML = `<h4>Magnet Bridge${bridge.device ? ' · ' + bridge.device : ''}</h4><p>${
-          learned ? `iPhone learned on the ${learned} side.` : 'No iPhone learned yet: a magnet works now, an iPhone needs learning once.'
+          learned ? `iPhone learned at: ${learned}.` : 'No iPhone learned yet: a magnet works now, an iPhone needs learning once.'
         } Keep the iPhone turned the same way as when learned.</p><div class="rad-row"><button class="rad-primary" data-a="learn">${
           learned ? 'Learn again' : 'Learn the iPhone'
         }</button><button data-a="close">Close</button></div>`;
@@ -1476,14 +1545,20 @@ void main() {
       }
     }
 
-    function placeEdge(side) {
+    // A glowing mark where the iPhone goes: a bar on an edge, an L in a corner.
+    function placeEdge(key) {
       edge.hidden = false;
-      const y = anchorAlong(side) * innerHeight;
+      const w = innerWidth;
       const s = edge.style;
-      if (side === 'top') {
-        Object.assign(s, { left: innerWidth / 2 - 70 + 'px', top: '0px', width: '140px', height: '5px' });
+      edge.className = 'rad-edge';
+      if (key === 'topLeft' || key === 'topRight') {
+        edge.classList.add('rad-edge-corner', key === 'topLeft' ? 'rad-tl' : 'rad-tr');
+        Object.assign(s, { left: key === 'topLeft' ? '0px' : w - 64 + 'px', top: '0px', width: '64px', height: '64px' });
+      } else if (key === 'top') {
+        Object.assign(s, { left: w / 2 - 70 + 'px', top: '0px', width: '140px', height: '5px' });
       } else {
-        Object.assign(s, { left: side === 'left' ? '0px' : innerWidth - 5 + 'px', top: y - 70 + 'px', width: '5px', height: '140px' });
+        const y = (key === 'left' ? 1 - placeS('left') : placeS('right') - 2) * innerHeight;
+        Object.assign(s, { left: key === 'left' ? '0px' : w - 5 + 'px', top: y - 70 + 'px', width: '5px', height: '140px' });
       }
     }
 
@@ -1561,10 +1636,10 @@ void main() {
         if (lab.renderAll) lab.renderAll();
         wake();
       },
-      state: () => ({ want: { ...want }, cur: { ...cur }, fx, bridge: bridge.state, sides, preview }),
+      state: () => ({ want: { ...want }, cur: { ...cur }, fx, bridge: bridge.state, sides, preview, P: geometry().P, N: geometry().N }),
       // For checks: hold the source somewhere without a mouse.
       hold(side, along, level) {
-        sim = { side, along, level, ut: 30 + level * 250 };
+        sim = { s: toS(side, along), level, ut: 30 + level * 250 };
         simAt = clock() + 1e6;
         wake();
       },
